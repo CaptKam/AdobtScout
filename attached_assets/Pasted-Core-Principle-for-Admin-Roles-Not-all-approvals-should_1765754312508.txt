@@ -1,0 +1,192 @@
+Core Principle for Admin Roles
+
+Not all approvals should be handled by the same person.
+Approvals differ in:
+
+Risk to animals and people
+
+Legal exposure
+
+Reversibility
+
+Volume and time sensitivity
+
+Admin roles should map to those dimensions.
+
+Recommended Primary Admin Roles
+1. Platform Admin (Super Admin)
+
+Purpose: Governance, overrides, policy enforcement
+
+Approves / Controls
+
+Shelter account approvals (final authority)
+
+Foster account escalations
+
+Edge-case application overrides
+
+Policy exceptions
+
+Account suspensions / bans
+
+Characteristics
+
+Small group (founders, head of ops)
+
+Rarely involved in routine approvals
+
+Has override power on all states
+
+In Your Diagram
+
+Final state authority on:
+
+ShelterPath → Approved
+
+FosterApproved (only if escalated)
+
+AdminApplicationReview → Decision (override only)
+
+2. Trust & Safety Admin (Primary Approval Workhorse)
+
+Purpose: Risk evaluation and human verification
+
+This is your most important role.
+
+Approves
+
+Foster applications (standard)
+
+Adoption applications (final human decision)
+
+Reviews AI + phone transcripts
+
+Flags suspicious behavior
+
+Rejects / Requests Info
+
+Incomplete or inconsistent applications
+
+Failed AI screening patterns
+
+Phone screening concerns
+
+In Your Diagram
+
+Owns:
+
+AdminFosterReview
+
+AdminApplicationReview
+
+Decision
+
+Key Tools They Need
+
+AI score + explanation
+
+Transcript highlights (red/yellow/green)
+
+Historical applicant behavior
+
+Shelter notes
+
+3. Shelter Admin (Organization-Level)
+
+Purpose: Shelter-specific approvals and operations
+
+Approves
+
+Adoption applications for their own dogs
+
+Meet & greet scheduling
+
+Shelter-specific requirements
+
+Cannot
+
+Approve platform access
+
+Override Trust & Safety rejections
+
+Approve fosters globally
+
+In Your Diagram
+
+Participates after:
+
+ApplicationApproved
+
+Co-decision model:
+
+Trust & Safety = “Eligible”
+
+Shelter Admin = “Final Match Approval”
+
+This mirrors Airbnb Host approval after platform vetting.
+
+4. AI Operations / Review Admin (Optional but Powerful)
+
+Purpose: Quality control for AI decisions (not users)
+
+Does NOT approve users directly
+
+Responsibilities
+
+Review false positives / negatives
+
+Tune AI scoring thresholds
+
+Audit transcripts and outcomes
+
+Monitor bias and drift
+
+In Your Diagram
+
+Observes:
+
+AIReview
+
+PhoneScreening
+
+TranscriptReview
+
+This role protects long-term system trust.
+
+Optional Supporting Roles (Later Stage)
+Support Admin
+
+Handles user questions
+
+Triggers “Needs More Info”
+
+No approval authority
+
+Compliance / Legal Admin (Future)
+
+Incident review
+
+Bite history
+
+Liability events
+
+Clean Role-to-Flow Mapping
+Flow Stage	Primary Role
+Shelter onboarding	Platform Admin
+Foster onboarding	Trust & Safety Admin
+AI screening	Automated
+Phone screening	Automated
+Transcript review	Trust & Safety Admin
+Adoption approval	Trust & Safety → Shelter Admin
+Overrides	Platform Admin
+One Critical Structural Recommendation
+Separate Eligibility from Match Approval
+
+Trust & Safety answers:
+“Is this person allowed to adopt/foster on the platform?”
+
+Shelter Admin answers:
+“Is this the right home for this specific dog?”
+
+This separation dramatically reduces liability and admin fatigue.

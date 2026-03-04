@@ -1,0 +1,137 @@
+Here is a high-power Ghostwriter prompt engineered specifically for perfecting AdoptScout’s adopter-mode UX.
+This will guide Ghostwriter to give you:
+
+Clean, modern UX
+
+Smooth navigation flows
+
+Intuitive page logic
+
+Pixel-level improvements
+
+Micro-interactions
+
+Better onboarding
+
+Seamless transitions
+
+Emotionally supportive design cues
+
+This is the kind of prompt UX teams at Airbnb, Duolingo, and Stripe use internally to polish flows.
+
+Just copy/paste this into Replit Ghostwriter:
+
+⭐ Ghostwriter Prompt: AdoptScout – Perfect Adopter Experience
+
+Goal:
+Help me perfect the Adopt mode user experience in AdoptScout. I want the adopter to feel:
+
+the app is incredibly smooth
+
+navigation is effortless
+
+the UI feels intuitive and predictable
+
+every screen transition feels intentional
+
+the flow supports them emotionally
+
+they always know “what to do next”
+
+the app feels premium, modern, and calming
+
+Your Task:
+Analyze the component, page, or flow I am working on and propose improvements that elevate clarity, accessibility, visual hierarchy, interaction design, navigation logic, and emotional user experience.
+
+Design Priorities:
+
+Simplicity & clarity – reduce cognitive load.
+
+Flow-state navigation – user never gets stuck or lost.
+
+Modern aesthetics – clean spacing, soft animations, consistent cards.
+
+Emotional tone – comforting microcopy, warm color usage, positive reinforcement.
+
+A11y-friendly design – large tap targets, strong contrast, readable text.
+
+Micro-interactions – subtle animations for swipes, transitions, likes, matches.
+
+State management clarity – loading states, empty states, errors, success.
+
+Mobile-first – thumb-friendly layouts, fixed bottom nav, gesture support.
+
+Adoption psychology principles – trust, confidence, excitement, reducing overwhelm.
+
+Expectations:
+When I submit a component, page, or piece of code:
+
+Identify friction points
+
+Suggest UX/UI refinements
+
+Recommend layout improvements
+
+Enhance navigation logic
+
+Improve copywriting tone
+
+Propose animation or motion cues
+
+Suggest reorganizing components for clarity
+
+Recommend how to reduce taps or scroll depth
+
+Ensure consistency across the entire adopter journey
+
+Ensure the experience feels “beautiful AND easy”
+
+Key Flows to Optimize:
+
+User landing in Adopt Mode
+
+Onboarding setup (preferences, household, lifestyle)
+
+Discover swipe flow
+
+Dog profile deep-dive
+
+AI match explanations
+
+Map view
+
+Chat with Scout AI
+
+Application steps / next action logic
+
+Output Format:
+Provide your answer using:
+
+Clear bullet points
+
+Before vs. after comparisons
+
+Example microcopy improvements
+
+Visual hierarchy suggestions
+
+Component-level adjustments (padding, spacing, icon usage)
+
+Navigation enhancements
+
+Interaction suggestions (swipe physics, button feedback, modal timing)
+
+Tone:
+Professional, friendly, and concise — like a senior product designer from Airbnb or Stripe reviewing my work.
+
+⭐ How To Use This Prompt
+
+Paste it into Ghostwriter, then:
+
+Open a page in Adopt mode
+
+Select the code or describe the UX issue
+
+Run the prompt
+
+Ghostwriter will return UX feedback, layout improvements, code updates, and design psychology enhancements.

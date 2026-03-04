@@ -1,0 +1,192 @@
+P0: Correctness and Trust
+1) Fix the broken endpoints immediately
+
+GET /api/shelter/applications/pending/count SQL syntax error near IN
+
+Likely causes:
+
+WHERE status IN ('pending') built incorrectly (string concatenation)
+
+Passing array incorrectly into SQL builder
+
+Missing parentheses or quoting
+
+Fix pattern:
+
+If using Drizzle/Prisma/etc., use the ORM’s inArray() / in helpers—not string SQL.
+
+Add a unit test with multiple statuses + empty array behavior.
+
+GET /api/shelter/calendar/[object Object]
+
+Cause: a Date object (or params object) is being concatenated into the URL.
+
+Fix:
+
+Use query params: /api/shelter/calendar?start=YYYY-MM-DD&end=YYYY-MM-DD
+
+Validate server-side and return 400 with a clear error if missing/invalid.
+
+Why this is P0: a CRM is only “best” if staff trust the numbers and trust navigation.
+
+P0: The “One Workspace” Requirement (Stop the Switching)
+2) Make the Pipeline the primary workspace (with a right-side Dog Panel)
+
+You already have Dog Detail and Pipeline. Combine them.
+
+Change:
+
+Keep /shelter/pipeline on screen
+
+Clicking a dog opens a right-side panel with tabs:
+
+Overview, Tasks, Medical, Behavior, Applications, Foster, History
+
+Hard rule: 80% of work must be completable inside the panel without route changes.
+
+Why: this is the single biggest lever to become “one of the best CRMs ever.”
+
+P0: Tasks Must Reflect Reality (No “0 tasks completed” days)
+3) Convert tasks from “checkbox list” into “work ledger”
+
+Right now tasks are partly manual, so the CRM lies to users.
+
+Fix:
+
+Introduce taskEvents (or an audit log) and auto-complete rules:
+
+When vaccine record added → complete relevant vaccine task
+
+When pipeline moved → complete stage transition tasks
+
+When stray hold expires and auto-moves → complete hold monitoring task(s)
+
+UI change:
+
+Tasks show as:
+
+“Suggested” vs “Required”
+
+“Auto-completed by system” vs “Completed by staff”
+
+Result: staff feel progress, and trust increases.
+
+P1: Inbox Excellence (Your CRM moat)
+4) Make the Inbox truly unified with one canonical object
+
+You’re currently “merging” applications and conversations client-side. That will break at scale and complicate filtering.
+
+Fix: Create a server-side inbox_items view (or endpoint)
+
+One endpoint: GET /api/shelter/inbox
+
+Each item includes:
+
+type (application|conversation|system)
+
+dogId, applicantId
+
+lastActivityAt
+
+unreadCount
+
+priority, status, assigneeId
+
+snippet
+
+Why: this makes search, pagination, sorting, and unread tracking correct and fast.
+
+P1: Automation Engine Safety (No “silent” automation)
+5) Add “explainability” logs for every automation action
+
+Add an automation_runs table:
+
+ruleId, triggerEvent, targetType, targetId, result, createdAt, error
+
+Then surface it in UI as plain English:
+
+“Stray hold expired → moved Bella to Medical Hold.”
+
+“Failed to schedule DHPP next dose: missing last dose date.”
+
+Why: prevents “the system did something and I don’t know why” fear.
+
+P1: Data model tightening (prevents future rewrites)
+6) Normalize “status changes” into an event timeline
+
+You already have “History” and “messages” with system_event. Make it consistent.
+
+Create a single dog_events table:
+
+dogId, eventType, payload, createdAt, actorType, actorId
+Examples:
+
+PIPELINE_MOVED, VACCINE_ADMINISTERED, HOLD_STARTED, APP_STATUS_CHANGED
+
+Why: timeline, analytics, audit, and automation become dramatically easier.
+
+P1: Permissions and multi-tenant safety
+7) Enforce shelter scoping at the DB query layer
+
+Every endpoint must guarantee:
+
+WHERE shelterId = currentShelterId
+
+Not optional. Not “checked in UI”.
+
+Add automated tests for cross-shelter access attempts.
+
+P2: Performance and UX polish that creates “best CRM” feel
+8) Prefetch the panel data on hover everywhere
+
+You’re already prefetching dog cards—extend it:
+
+Hover dog → prefetch dog panel tabs (overview + tasks + latest medical)
+
+Click → instant open
+
+9) Make stages “smart” (decision-aware)
+
+Each pipeline stage gets 1–3 inline actions, and those actions create/complete tasks.
+
+10) Add “Now / Next / Later” in Operations Hub
+
+Now: must do today
+
+Next: blocks movement
+
+Later: housekeeping
+
+This reduces mental load.
+
+What I would do this week (tight execution plan)
+
+Day 1–2 (P0)
+
+Fix SQL count endpoint + tests
+
+Fix calendar route params + validation
+
+Add basic error boundary UI for shelter portal
+
+Day 3–4 (P0)
+
+Implement Pipeline + Dog Panel (read-only first)
+
+Panel tabs backed by existing endpoints
+
+Day 5 (P0/P1)
+
+Auto-complete tasks for 2–3 high-volume actions:
+
+vaccine added
+
+pipeline move
+
+hold expired auto-move
+
+The one principle to keep you on the “best CRM” path
+
+If a user has to ask, “Where do I go to do that?” you ship the wrong UI.
+
+Your structure is excellent. Now make it work from one place, make it never lie, and make automation explain itself.

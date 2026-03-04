@@ -1,0 +1,189 @@
+1. Core User Roles (Non-Negotiable)
+
+Provide:
+
+A list of every role that can log into the CRM
+Example:
+
+Intake staff
+
+Vet tech
+
+Behavior team
+
+Foster coordinator
+
+Adoption counselor
+
+Shelter admin
+
+Volunteer
+
+Why this matters:
+CRMs feel bloated when one screen tries to serve multiple roles.
+My first pass will be to determine:
+
+Which roles should never see certain data
+
+Which roles need only 3–5 actions per day
+
+Which roles deserve their own simplified “mode”
+
+If a role cannot be described in one sentence, it is already over-scoped.
+
+2. “Day in the Life” for Each Role (Critical)
+
+Provide for each role:
+
+Top 3 things they must do every day
+
+Top 2 things that are occasional
+
+What blocks them from finishing their shift on time
+
+Example format (short is fine):
+
+Role: Intake Staff
+Daily:
+- Log new dogs
+- Assign kennel
+- Flag medical issues
+Occasional:
+- Owner surrender paperwork
+- Bite history review
+Pain points:
+- Too many required fields
+- Unsure when a dog is “ready” to move forward
+
+
+Why this matters:
+This exposes feature clutter immediately.
+Anything not tied to a daily or occasional task is either:
+
+Admin-only
+
+Automation-eligible
+
+Or should not exist yet
+
+3. Your Current Navigation Map (Even Rough)
+
+Provide one of the following:
+
+Sidebar menu list
+
+Top-level routes (e.g. /intake, /pipeline, /medical, etc.)
+
+Or a screenshot with labels
+
+Why this matters:
+CRMs feel overwhelming when:
+
+Navigation reflects engineering structure instead of mental models
+
+Too many “entry points” exist for the same task
+
+I will:
+
+Collapse redundant sections
+
+Identify false distinctions (e.g. “Medical” vs “Health”)
+
+Recommend a single operational spine
+
+4. Your Pipeline Stages (Exact Names)
+
+Provide:
+
+Every pipeline column name, in order
+
+Any conditional logic (locks, blockers, approvals)
+
+Example:
+
+Intake → Stray Hold → Medical Eval → Behavior Review → Ready → Listed → Adopted
+
+
+Why this matters:
+Pipelines often become feature dumping grounds.
+
+I will evaluate:
+
+Which stages are actually states vs tasks
+
+Which should be automated transitions
+
+Which should never be manually draggable
+
+A clean pipeline alone can remove 30–40% perceived complexity.
+
+5. Required Fields vs Optional Fields
+
+Provide:
+
+A list of fields required at intake
+
+Fields required before “Ready for Adoption”
+
+Fields that are “nice to have”
+
+Why this matters:
+This is where burnout hides.
+
+Most CRMs fail because:
+
+They require too much data too early
+
+They confuse data completeness with operational readiness
+
+I will help you define:
+
+Progressive disclosure
+
+Auto-fill candidates
+
+“Good enough to move forward” rules
+
+6. What You’re Personally Uncomfortable Cutting
+
+Provide (honestly):
+
+Features you like but suspect are too much
+
+Features you added “because other CRMs have them”
+
+Anything you are emotionally attached to
+
+Why this matters:
+Every great product has a graveyard of good ideas.
+
+I will not remove value—only sequence it correctly.
+
+What I Will Deliver Back to You
+
+Once you provide the above, I will give you:
+
+Feature Kill / Keep / Defer list
+
+Role-based surface area map (who sees what)
+
+Simplified operational spine (the 1–2 screens that matter)
+
+“This feels calm” UX principles specific to shelter stress environments
+
+A clear answer to:
+“Is this too much—or just badly staged?”
+
+How to Proceed (Recommended Order)
+
+If you want to move fast:
+
+Start with Roles + Day-in-the-Life
+
+Then Pipeline stages
+
+Then Navigation
+
+You do not need to clean or format anything. Raw notes are better.
+
+When you’re ready, send Section 1 and 2 first, and I’ll begin the review immediately.

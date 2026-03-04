@@ -1,0 +1,539 @@
+Hero “Action Required” (same as before)
+
+Last updated timestamp (trust)
+
+Goals / progress (admin/manager only)
+
+Next Up (read-only) queue preview (role-aware)
+
+High-signal alerts strip (vaccines due soon optional, no work execution)
+
+No checkboxes, no mutations, no inline task completion
+
+It uses endpoints you already have in your codebase:
+
+GET /api/shelter/dashboard
+
+GET /api/shelter/staff/me
+
+GET /api/shelter/tasks
+
+GET /api/shelter/medical/vaccines/upcoming
+
+If any of these return a slightly different shape, you’ll just adjust the interfaces.
+
+DashboardShell.tsx (premium version)
+import { Link } from "wouter";
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { format, isToday, isPast, addDays, isWithinInterval } from "date-fns";
+
+import { ShelterLayout } from "@/components/shelter-layout";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+
+import {
+  AlertTriangle,
+  CheckCircle,
+  ClipboardCheck,
+  Stethoscope,
+  Heart,
+  ChevronRight,
+  RefreshCw,
+  Target,
+  CalendarClock,
+  Syringe,
+} from "lucide-react";
+
+// ---- Types (adjust if your API differs) ----
+interface DashboardMetrics {
+  dogsInIntake: number;
+  dogsInMedicalHold: number;
+  dogsReady: number;
+  overdueTasks: number;
+  activeApplications: number;
+}
+
+interface StaffMe {
+  role: string;
+}
+
+interface ShelterTask {
+  id: string;
+  title: string;
+  status: "pending" | "completed";
+  priority?: "low" | "medium" | "high" | "urgent";
+  dueDate?: string | null;
+  dogId?: string | null;
+  taskType?: string;
+}
+
+interface UpcomingVaccine {
+  id: string;
+  dogId: string;
+  dogName: string;
+  vaccineName: string;
+  nextDueDate: string;
+}
+
+// ---- Small helpers ----
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
+}
+
+function formatUpdatedAt(updatedAt?: number) {
+  if (!updatedAt) return "—";
+  return format(new Date(updatedAt), "h:mm a");
+}
+
+function getRoleBuckets(role: string) {
+  const isAdmin = role === "owner" || role === "manager";
+  const isMedical = role === "medical" || isAdmin;
+  const isAdoptions = role === "adoption_counselor" || isAdmin;
+  const isIntake = role === "kennel" || isAdmin;
+  return { isAdmin, isMedical, isAdoptions, isIntake };
+}
+
+// ---- Component ----
+export default function DashboardShell() {
+  const staffQuery = useQuery<StaffMe>({
+    queryKey: ["/api/shelter/staff/me"],
+    retry: false,
+  });
+
+  const role = staffQuery.data?.role ?? "staff";
+  const { isAdmin, isMedical, isAdoptions, isIntake } = getRoleBuckets(role);
+
+  const metricsQuery = useQuery<DashboardMetrics>({
+    queryKey: ["/api/shelter/dashboard"],
+  });
+
+  const tasksQuery = useQuery<ShelterTask[]>({
+    queryKey: ["/api/shelter/tasks"],
+  });
+
+  const vaccinesQuery = useQuery<UpcomingVaccine[]>({
+    queryKey: ["/api/shelter/medical/vaccines/upcoming"],
+    enabled: isMedical, // don’t fetch for roles that never see it
+  });
+
+  const metrics = metricsQuery.data;
+
+  const hasBlockers =
+    (metrics?.dogsInMedicalHold ?? 0) > 0 ||
+    (metrics?.dogsInIntake ?? 0) > 0 ||
+    (metrics?.overdueTasks ?? 0) > 0;
+
+  // “Next Up” is a calm preview: overdue + due today + due within 7 days (max 6)
+  const nextUp = useMemo(() => {
+    const tasks = tasksQuery.data ?? [];
+    const pending = tasks.filter((t) => t.status !== "completed");
+    const now = new Date();
+    const in7 = addDays(now, 7);
+
+    const scored = pending
+      .map((t) => {
+        const due = t.dueDate ? new Date(t.dueDate) : null;
+        const isOverdue = !!due && isPast(due) && !isToday(due);
+        const isDueToday = !!due && isToday(due);
+        const isDueSoon = !!due && isWithinInterval(due, { start: now, end: in7 });
+
+        // priority: overdue > today > urgent/high > due soon > no due date
+        let score = 0;
+        if (isOverdue) score += 100;
+        if (isDueToday) score += 80;
+        if (t.priority === "urgent") score += 70;
+        if (t.priority === "high") score += 50;
+        if (isDueSoon) score += 30;
+        if (!due) score += 5;
+
+        return { task: t, score, due };
+      })
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 6);
+
+    return scored;
+  }, [tasksQuery.data]);
+
+  const urgentVaccines = useMemo(() => {
+    const list = vaccinesQuery.data ?? [];
+    const now = new Date();
+    const in7 = addDays(now, 7);
+    return list
+      .filter((v) => {
+        const due = new Date(v.nextDueDate);
+        return isWithinInterval(due, { start: now, end: in7 }) || isToday(due);
+      })
+      .slice(0, 4);
+  }, [vaccinesQuery.data]);
+
+  const updatedAt = Math.max(
+    metricsQuery.dataUpdatedAt ?? 0,
+    tasksQuery.dataUpdatedAt ?? 0,
+    vaccinesQuery.dataUpdatedAt ?? 0
+  );
+
+  // Simple goals: keep structure; replace targets with real shelter settings later
+  const goals = useMemo(() => {
+    // Example: “Ready for adoption” goal
+    const ready = metrics?.dogsReady ?? 0;
+    const targetReady = 25; // TODO: load from shelter settings
+    const pctReady = targetReady > 0 ? Math.min(100, Math.round((ready / targetReady) * 100)) : 0;
+
+    // Example: “Reduce holds” goal
+    const holds = metrics?.dogsInMedicalHold ?? 0;
+    const targetHoldsMax = 5; // TODO: load from settings
+    // invert for progress feel: fewer holds = better
+    const pctHolds = targetHoldsMax > 0 ? Math.max(0, Math.min(100, Math.round(((targetHoldsMax - holds) / targetHoldsMax) * 100))) : 0;
+
+    return {
+      ready: { label: "Dogs Adoptable", value: ready, target: targetReady, pct: pctReady },
+      holds: { label: "Medical Holds (Lower is better)", value: holds, target: targetHoldsMax, pct: pctHolds },
+    };
+  }, [metrics?.dogsReady, metrics?.dogsInMedicalHold]);
+
+  const loading = metricsQuery.isLoading || staffQuery.isLoading;
+  const error = metricsQuery.isError || staffQuery.isError;
+
+  return (
+    <ShelterLayout>
+      <div className="p-6 max-w-6xl mx-auto space-y-8">
+        {/* Top Row: Title + Updated */}
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-bold">Dashboard</h1>
+            <p className="text-sm text-muted-foreground">
+              Focus, then route work to the right workspace.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <RefreshCw className="w-4 h-4" />
+            <span>
+              Updated {formatUpdatedAt(updatedAt)}
+            </span>
+          </div>
+        </div>
+
+        {/* Error / Loading */}
+        {error && (
+          <Card className="border-red-500/40 bg-red-500/5">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-red-600">
+                <AlertTriangle className="w-5 h-5" />
+                Dashboard data unavailable
+              </CardTitle>
+              <CardDescription>
+                Please refresh. If this persists, check API health for /api/shelter/dashboard.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        )}
+
+        {/* HERO */}
+        <Card className={cx(hasBlockers && "border-red-500/40 bg-red-500/5")}>
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2">
+              {loading ? (
+                <span className="text-muted-foreground">Loading status…</span>
+              ) : hasBlockers ? (
+                <>
+                  <AlertTriangle className="w-5 h-5 text-red-500" />
+                  Action Required Today
+                </>
+              ) : (
+                <>
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  All Systems Operating Normally
+                </>
+              )}
+            </CardTitle>
+            <CardDescription>
+              Keep the pipeline moving. Resolve blockers first.
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div className="space-y-1 text-sm">
+              {(metrics?.dogsInMedicalHold ?? 0) > 0 && (
+                <p>• {metrics?.dogsInMedicalHold} dogs on medical hold</p>
+              )}
+              {(metrics?.dogsInIntake ?? 0) > 0 && (
+                <p>• {metrics?.dogsInIntake} intakes awaiting clearance</p>
+              )}
+              {(metrics?.overdueTasks ?? 0) > 0 && (
+                <p className="text-red-600">• {metrics?.overdueTasks} overdue tasks</p>
+              )}
+              {!loading && !hasBlockers && <p>No blockers detected.</p>}
+              {loading && <p className="text-muted-foreground">Fetching key indicators…</p>}
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Button asChild>
+                <Link href="/shelter/pipeline">
+                  Open Pipeline
+                  <ChevronRight className="w-4 h-4 ml-1" />
+                </Link>
+              </Button>
+
+              {isAdmin && (
+                <Button variant="outline" asChild>
+                  <Link href="/shelter/analytics">
+                    View Insights
+                    <ChevronRight className="w-4 h-4 ml-1" />
+                  </Link>
+                </Button>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Work Routing Cards (Role-aware) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {isMedical && (
+            <Card className="hover-elevate">
+              <CardContent className="p-5 space-y-3">
+                <div className="flex items-center gap-2">
+                  <Stethoscope className="w-5 h-5 text-red-500" />
+                  <h3 className="font-semibold">Medical Queue</h3>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Treatments, vaccines, holds, and clearance.
+                </p>
+                <Button variant="outline" asChild>
+                  <Link href="/shelter/medical">
+                    Open Medical
+                    <ChevronRight className="w-4 h-4 ml-1" />
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {isAdoptions && (
+            <Card className="hover-elevate">
+              <CardContent className="p-5 space-y-3">
+                <div className="flex items-center gap-2">
+                  <Heart className="w-5 h-5 text-pink-500" />
+                  <h3 className="font-semibold">Applications</h3>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {metrics?.activeApplications ?? 0} active applications
+                </p>
+                <Button variant="outline" asChild>
+                  <Link href="/shelter/applications">
+                    Review Applications
+                    <ChevronRight className="w-4 h-4 ml-1" />
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {isIntake && (
+            <Card className="hover-elevate">
+              <CardContent className="p-5 space-y-3">
+                <div className="flex items-center gap-2">
+                  <ClipboardCheck className="w-5 h-5 text-blue-500" />
+                  <h3 className="font-semibold">Intake</h3>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Start a new intake or resume drafts.
+                </p>
+                <Button variant="outline" asChild>
+                  <Link href="/shelter/intake">
+                    Start Intake
+                    <ChevronRight className="w-4 h-4 ml-1" />
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+
+        {/* Secondary Grid: Goals + Next Up + Alerts (high signal only) */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* Goals (Admin/Manager only) */}
+          {isAdmin ? (
+            <Card className="lg:col-span-1">
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Target className="w-4 h-4 text-primary" />
+                  Goals
+                </CardTitle>
+                <CardDescription className="text-xs">
+                  Lightweight progress indicators (replace targets with settings later).
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <GoalRow
+                  label={goals.ready.label}
+                  value={`${goals.ready.value} / ${goals.ready.target}`}
+                  pct={goals.ready.pct}
+                />
+                <GoalRow
+                  label={goals.holds.label}
+                  value={`${goals.holds.value} (target ≤ ${goals.holds.target})`}
+                  pct={goals.holds.pct}
+                />
+              </CardContent>
+            </Card>
+          ) : (
+            <Card className="lg:col-span-1">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base">Shelter Status</CardTitle>
+                <CardDescription className="text-xs">
+                  High-level health check.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-wrap gap-2">
+                <Badge variant="outline">Pipeline Active</Badge>
+                <Badge variant="outline">Work Routed</Badge>
+                <Badge variant="outline">Low Noise</Badge>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Next Up (Read-only preview) */}
+          <Card className="lg:col-span-1">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-base">
+                <CalendarClock className="w-4 h-4 text-primary" />
+                Next Up
+              </CardTitle>
+              <CardDescription className="text-xs">
+                A preview of what should be handled soon (read-only).
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {tasksQuery.isLoading ? (
+                <p className="text-sm text-muted-foreground">Loading tasks…</p>
+              ) : nextUp.length === 0 ? (
+                <p className="text-sm text-muted-foreground">No pending tasks.</p>
+              ) : (
+                <>
+                  {nextUp.map(({ task, due }) => (
+                    <div
+                      key={task.id}
+                      className="flex items-center justify-between gap-3 rounded-lg border bg-background px-3 py-2"
+                    >
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium truncate">{task.title}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {due
+                            ? isToday(due)
+                              ? `Due today`
+                              : isPast(due)
+                                ? `Overdue`
+                                : `Due ${format(due, "MMM d")}`
+                            : "No due date"}
+                        </p>
+                      </div>
+
+                      <Badge variant="outline" className="shrink-0">
+                        {task.priority ?? "medium"}
+                      </Badge>
+                    </div>
+                  ))}
+
+                  <div className="pt-2">
+                    <Button variant="outline" className="w-full" asChild>
+                      <Link href="/shelter/tasks">
+                        View All Tasks
+                        <ChevronRight className="w-4 h-4 ml-1" />
+                      </Link>
+                    </Button>
+                  </div>
+                </>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Alerts Strip: Vaccines Due Soon (Medical/Admin only) */}
+          <Card className="lg:col-span-1">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Syringe className="w-4 h-4 text-primary" />
+                Alerts
+              </CardTitle>
+              <CardDescription className="text-xs">
+                High-signal reminders only.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {!isMedical ? (
+                <p className="text-sm text-muted-foreground">
+                  No alerts for your role.
+                </p>
+              ) : vaccinesQuery.isLoading ? (
+                <p className="text-sm text-muted-foreground">Checking vaccines…</p>
+              ) : urgentVaccines.length === 0 ? (
+                <p className="text-sm text-muted-foreground">No vaccine alerts this week.</p>
+              ) : (
+                <>
+                  {urgentVaccines.map((v) => (
+                    <div key={v.id} className="flex items-center justify-between gap-3 rounded-lg border bg-background px-3 py-2">
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium truncate">{v.dogName}</p>
+                        <p className="text-xs text-muted-foreground truncate">{v.vaccineName}</p>
+                      </div>
+                      <Badge variant="outline" className="shrink-0">
+                        {format(new Date(v.nextDueDate), "MMM d")}
+                      </Badge>
+                    </div>
+                  ))}
+
+                  <div className="pt-2">
+                    <Button variant="outline" className="w-full" asChild>
+                      <Link href="/shelter/medical">
+                        Open Medical Alerts
+                        <ChevronRight className="w-4 h-4 ml-1" />
+                      </Link>
+                    </Button>
+                  </div>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Confidence strip (keep, but calm) */}
+        <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
+          <Badge variant="outline">Dashboard Calm</Badge>
+          <Badge variant="outline">Work Routed</Badge>
+          <Badge variant="outline">Blockers Visible</Badge>
+        </div>
+      </div>
+    </ShelterLayout>
+  );
+}
+
+// ---- Tiny component: premium progress row ----
+function GoalRow({ label, value, pct }: { label: string; value: string; pct: number }) {
+  return (
+    <div className="space-y-2">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-sm font-medium truncate">{label}</p>
+          <p className="text-xs text-muted-foreground">{value}</p>
+        </div>
+        <Badge variant="outline" className="shrink-0">
+          {pct}%
+        </Badge>
+      </div>
+
+      <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+        <div className="h-full bg-primary" style={{ width: `${pct}%` }} />
+      </div>
+    </div>
+  );
+}
+
+What makes this “amazing” (in practice)
+
+It adds meaningful info (Goals, Next Up, Alerts) without turning into a messy admin panel.
+
+It’s role-aware and read-only by default.
+
+It stays a routing layer, not a work surface.

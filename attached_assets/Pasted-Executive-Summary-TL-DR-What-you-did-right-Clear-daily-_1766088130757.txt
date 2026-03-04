@@ -1,0 +1,314 @@
+Executive Summary (TL;DR)
+
+What you did right
+
+Clear daily command center
+
+Strong urgency math
+
+Good routing to Pipeline / Inbox
+
+Visual hierarchy is coherent
+
+Data density is appropriate
+
+This will genuinely reduce shelter stress
+
+What must change
+
+Tasks are still too manual and too visible
+
+Operations Hub is doing some work that belongs to Pipeline
+
+“Quick Actions” create fragmentation
+
+There’s no single “today’s blocker” truth
+
+Task completion ≠ outcome completion (this is the big one)
+
+1️⃣ Tasks Are Still Treated as First-Class Objects (They Shouldn’t Be)
+Problem (Conceptual)
+
+You still treat tasks as:
+
+Things humans complete
+
+Things humans create
+
+Things humans organize
+
+Best-in-class CRMs treat tasks as system artifacts, not user goals.
+
+Right now:
+
+Users check boxes
+
+Users create ad-hoc tasks
+
+Users mentally manage task lists
+
+That’s old CRM thinking.
+
+Fix (Critical Shift)
+Rule
+
+Pipeline state changes should complete tasks, not the other way around.
+
+Concrete Changes
+❌ Stop encouraging checkbox completion
+
+Keep checkboxes only for:
+
+Admin tasks
+
+Non-dog tasks
+
+Hide checkboxes for:
+
+Medical
+
+Intake
+
+Behavior
+
+Foster
+
+Those should auto-complete on state change.
+
+✅ Replace “Complete Task” with “Resolve Blocker”
+
+Visually and semantically.
+
+Instead of:
+
+toggleTaskMutation({ completed: true })
+
+
+Think:
+
+resolveBlocker({
+  dogId,
+  blockerType: 'medical_clearance'
+})
+
+
+Tasks become evidence, not actions.
+
+2️⃣ Operations Hub Is Doing Too Much Execution
+
+Your own architecture doc says:
+
+Operations Hub routes, Pipeline executes.
+
+But here, Operations Hub:
+
+Completes tasks
+
+Handles pet actions
+
+Creates tasks
+
+That creates dual work surfaces.
+
+Fix
+Operations Hub should ONLY:
+
+Surface urgency
+
+Route users
+
+Summarize progress
+
+What to Remove or De-emphasize
+
+Bulk task execution
+
+Deep task scrolling
+
+Pet-level decision-making
+
+What to Add Instead
+
+Clear routing CTAs with intent
+
+Example:
+
+“3 dogs blocked in Medical Hold → Open Pipeline”
+
+You already started this — lean into it harder.
+
+3️⃣ “Quick Actions” Are Fragmenting the Mental Model
+Problem
+
+Quick Actions currently:
+
+Add Pet
+
+Add Task
+
+New Intake
+
+Review Applications
+
+Manage Fosters
+
+This is a menu, not a workflow.
+
+Menus increase cognitive load.
+
+Fix
+Replace “Quick Actions” with Workflow Shortcuts
+
+Each shortcut should answer:
+
+“What is the next outcome I can move forward?”
+
+Example Replacement
+
+Instead of:
+
+Add Task
+
+Use:
+
+“Resolve Intake Blockers”
+
+“Advance Medical Holds”
+
+“Prepare Dogs for Adoption”
+
+These should route to filtered Pipeline views, not forms.
+
+4️⃣ Now / Next / Later Logic Is Good — But Not Opinionated Enough
+
+Your categorization is technically correct.
+
+But elite CRMs go one step further:
+
+They decide what matters when humans won’t.
+
+Fix
+Add a “Primary Focus” Section (Top of Page)
+
+This should contain 1–3 items max.
+
+Criteria:
+
+Blocks adoption
+
+Overdue
+
+High urgency
+
+Affects multiple downstream steps
+
+Example UI:
+
+🔴 Today’s Blockers
+• Bella – Medical clearance overdue
+• 2 dogs stuck in Intake > 48h
+
+
+This prevents:
+
+Task list scanning
+
+Decision fatigue
+
+5️⃣ Task Completion ≠ Outcome Completion (MOST IMPORTANT)
+
+Right now:
+
+A task can be completed
+
+But the dog may still be blocked
+
+That’s dangerous.
+
+Fix (Non-Negotiable)
+Introduce the concept of Blockers
+
+Each dog should have:
+
+blockers: {
+  intakeIncomplete: boolean
+  medicalIncomplete: boolean
+  behaviorIncomplete: boolean
+  photosMissing: boolean
+}
+
+
+Tasks are derived from blockers, not authoritative.
+
+Result
+
+Operations Hub shows blockers
+
+Pipeline visualizes blockers
+
+Tasks become implementation details
+
+This is the difference between:
+
+“Task management software”
+
+Outcome-driven CRM
+
+6️⃣ Dogs Needing Action → Wrong Navigation Target
+
+This is subtle but important.
+
+Current
+<Link href={`/shelter/dogs/${dog.id}`}>
+
+Correct
+<Link href={`/shelter/pipeline?focus=${dog.id}`}>
+
+
+Why?
+
+Pipeline is the execution surface
+
+Dog pages are reference surfaces
+
+You already designed the system this way — this aligns behavior with architecture.
+
+7️⃣ What You Did Exceptionally Well (Don’t Undervalue This)
+
+I want to be very explicit:
+
+Your urgency math is excellent
+
+Your visual hierarchy is calm and readable
+
+Your density is appropriate for shelter staff
+
+This would outperform Shelterluv immediately
+
+This is not amateur code or thinking
+
+Most CRMs fail because they:
+
+Expose everything
+
+Ask humans to decide priority
+
+Treat tasks as goals
+
+You are very close to escaping that trap entirely.
+
+The One Sentence Upgrade Path
+
+Make pipeline state the truth, blockers the signal, and tasks the exhaust.
+
+Do that, and this becomes:
+
+Faster
+
+Safer
+
+Calmer
+
+Scalable
+
+Very hard to replace

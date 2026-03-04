@@ -1,0 +1,12 @@
+
+<svg width="300" height="80" viewBox="0 0 300 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Icon -->
+  <rect width="64" height="64" y="8" rx="16" fill="hsl(24, 90%, 48%)"/>
+  <path d="M32 65C32 65 13.3333 49.1667 13.3333 33.3333C13.3333 25.9695 19.3028 20 26.6667 20C30.202 20 33.3333 22 32 25.8333C33.3333 22 36.4647 20 40 20C47.3638 20 53.3333 25.9695 53.3333 33.3333C53.3333 49.1667 32 65 32 65Z" fill="white"/>
+  
+  <!-- Scout text -->
+  <text x="85" y="52" font-family="system-ui, -apple-system, sans-serif" font-size="36" font-weight="700" fill="hsl(24, 8%, 8%)">Scout</text>
+  
+  <!-- Tagline -->
+  <text x="85" y="68" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="400" fill="hsl(24, 8%, 40%)">Find Your Perfect Match</text>
+</svg>

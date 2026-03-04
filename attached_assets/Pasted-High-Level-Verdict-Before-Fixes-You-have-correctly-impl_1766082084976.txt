@@ -1,0 +1,296 @@
+High-Level Verdict (Before Fixes)
+
+You have correctly implemented:
+
+A primary workspace (Pipeline)
+
+A persistent side panel (huge win)
+
+Optimistic state
+
+Prefetching
+
+Inline actions
+
+Visual urgency
+
+Performance at scale
+
+That already puts you ahead of Shelterluv, Salesforce-style CRMs, and 90% of internal tools.
+
+The remaining issues fall into 5 categories:
+
+State authority
+
+Cognitive friction
+
+Automation trust
+
+Task truthfulness
+
+Architectural cleanliness
+
+1️⃣ Pipeline State Authority (MOST IMPORTANT)
+Problem
+
+You currently have two sources of truth for pipeline state:
+
+usePipelineStore (optimistic, client)
+
+Server state via /api/shelter/intake/:id
+
+This is correct technically — but UX-dangerous if not tightly constrained.
+
+Risk
+
+Side panel updates stage
+
+Drag updates stage
+
+Automation updates stage
+
+Tasks update stage
+
+Without a single “state transition authority,” edge cases will creep in.
+
+Fix (Critical)
+
+Create a single state transition function and use it everywhere.
+
+function transitionDogStage({
+  dogId,
+  fromStage,
+  toStage,
+  source, // 'drag' | 'panel' | 'automation' | 'task'
+}: {
+  dogId: string;
+  fromStage: string;
+  toStage: string;
+  source: 'drag' | 'panel' | 'automation' | 'task';
+})
+
+
+All of these must route through it:
+
+Drag end
+
+Side panel stage change
+
+Automation
+
+Quick actions
+
+Why this matters
+This gives you:
+
+Auditability
+
+Predictability
+
+Future analytics
+
+Easier bug isolation
+
+This is how elite CRMs survive scale.
+
+2️⃣ Stage Actions Are Still “Task Creators” (They Must Become State Movers)
+Problem
+
+Your StageActionButtons create tasks, but do not:
+
+Change pipeline state
+
+Close existing tasks
+
+Create a feeling of progress
+
+This causes:
+
+“I clicked something but nothing really happened.”
+
+Fix
+
+Stage actions must be stateful shortcuts, not task generators.
+
+Example: Clear Medical
+
+Instead of:
+
+POST /tasks
+
+
+Do:
+
+Transition stage → behavior_eval
+
+Auto-complete all medical_hold tasks
+
+Log event: MEDICAL_CLEARED
+
+Tasks should be effects, not goals.
+
+Rule
+
+Actions change state → state resolves tasks
+Never the other way around.
+
+3️⃣ Tasks Are Still Too Visible for a Best-in-Class CRM
+Problem
+
+You still expose tasks as a primary concept:
+
+Stage actions create tasks
+
+Tasks are manually completed
+
+Tasks live as first-class entities
+
+The best CRMs hide tasks whenever possible.
+
+Fix
+
+Reframe tasks as:
+
+Internal system scaffolding
+
+Rarely touched directly
+
+Concrete changes
+
+Remove task checkboxes from most surfaces
+
+Auto-complete tasks on:
+
+Pipeline move
+
+Medical record creation
+
+Hold expiration
+
+Tasks remain visible only when blocked
+
+Success metric
+
+A staff member can work all day without opening /tasks.
+
+4️⃣ Dog Side Panel Is Right — But It Needs One More Rule
+
+Your DogSidePanel is excellent. This is the crown jewel.
+
+Missing Rule
+
+The panel must never lie about state.
+
+Problem
+
+You locally update:
+
+setSelectedDog(prev => ({
+  ...prev,
+  intake: { ...prev.intake, pipelineStatus: newStage }
+}))
+
+
+This is fine short-term — but dangerous long-term.
+
+Fix
+
+The side panel should:
+
+Read from pipeline store
+
+Not maintain its own partial copy
+
+Pattern
+const selectedDog = usePipelineStore(
+  s => s.dogs.find(d => d.id === selectedDogId)
+);
+
+
+The panel becomes a view, not a state holder.
+
+This avoids desync bugs later.
+
+5️⃣ Collision Logic Is Correct — But Missing Intent
+
+Your collision detection is technically excellent.
+
+But it is too permissive.
+
+Problem
+
+Right now, dogs can be dropped:
+
+On any column
+
+On any dog
+
+Even when logically invalid
+
+Fix
+
+Add stage constraints.
+
+Examples:
+
+Cannot go from intake → adopted
+
+Cannot leave medical_hold without clearance
+
+Cannot go to featured without photos
+
+Implementation
+
+Add a canTransition(from, to, dog) function.
+
+Use it:
+
+In handleDragEnd
+
+In side panel stage selector
+
+In automation rules
+
+UX outcome
+Users feel protected, not restricted.
+
+6️⃣ Search Is Global, But Context Is Pipeline-Specific
+Problem
+
+Your search filters all dogs globally, even if:
+
+The user is mentally focused on a single stage
+
+This is subtle, but important.
+
+Fix (Optional but High-End)
+
+Add:
+
+“Search within stage”
+
+Or a per-column quick filter
+
+This mirrors how human attention actually works.
+
+7️⃣ Missing the Final CRM Touch: “Why”
+
+You are doing a lot of automation silently.
+
+Add This (Small, Huge Impact)
+
+Every automatic pipeline change should leave a human-readable breadcrumb.
+
+Example:
+
+“Moved to Behavior Eval — Medical protocol completed.”
+
+Where:
+
+Dog history
+
+Side panel
+
+Automation log
+
+This is how you build trust.

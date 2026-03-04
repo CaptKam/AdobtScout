@@ -1,0 +1,120 @@
+🚀 Replit Ghostwriter Prompt: Object Recognition + AI Temperament Scanner
+
+Build an interactive Object Recognition Camera Feature for Scout.
+
+Feature Overview:
+Create a camera-driven flow where the user scans an animal (primarily dogs). The system should automatically identify the animal, detect its breed, capture temperament signals, and auto-generate a full profile.
+
+Core Requirements:
+
+1. Camera Flow
+
+Open device camera in a dedicated scanning mode.
+
+Show a guided overlay instructing the user to move around the dog for better angles.
+
+Automatically capture when the model detects a clear frame.
+
+Save raw image + metadata.
+
+2. Object Recognition & Breed Detection
+
+Use a vision model to identify:
+
+species (dog/cat)
+
+breed prediction
+
+confidence score
+
+Run inference on-device when possible (MediaPipe/TFLite) and fall back to server-side (OpenAI Vision).
+
+3. Temperament Detection
+
+Analyze visible cues in real time or from captured frames:
+
+Tail wagging (frequency/speed)
+
+Tongue-out detection
+
+Ear position
+
+Posture (confident, submissive, relaxed, anxious)
+
+Face relaxation vs. tension
+
+“Happy indicators”
+
+Output normalized temperament metadata:
+
+{
+  calmLevel: 0-1,
+  friendlinessScore: 0-1,
+  confidenceScore: 0-1,
+  stressScore: 0-1,
+  energyEstimate: "low | medium | high"
+}
+
+4. Auto-Generated Dog Profile
+
+After scanning:
+
+Generate a clean profile photo
+
+Autofill attributes:
+
+breed
+
+approximate age
+
+size classification
+
+temperament summary
+
+Create a JSON profile object ready to save to the database.
+
+5. ML Improvement Pipeline
+
+Store anonymized scan data
+
+Continuously retrain temperament predictions as more animals are scanned
+
+Design data schema for incremental learning
+
+6. UI/UX Requirements
+
+Minimal, Apple/Google-level clean design
+
+Progress indicator while scanning
+
+Smooth animation when generating profile
+
+Display AI-derived insights with confidence values
+
+7. Code Expectations
+
+Use clean modular architecture
+
+TypeScript for frontend & backend
+
+React camera component (Expo or web-compatible)
+
+Vision processing service in /services/vision
+
+Temperament analysis pipeline in /services/ai/temperament
+
+Reusable hook: useAnimalScanner()
+
+Deliverables
+
+Ghostwriter should generate:
+
+Client UI component for scanning
+
+Server endpoint for vision processing
+
+Utilities for breed + temperament inference
+
+Data model for AI-generated profiles
+
+Documentation comments for maintainability

@@ -1,0 +1,365 @@
+Executive Diagnosis (Plain Language)
+
+Your CRM feels overwhelming for three reasons, not because you built too much:
+
+Surface area is too wide
+Too many top-level routes and entry points for daily work.
+
+Role intent is not enforced at the UI level
+You have RBAC, but the UI still behaves like a super-admin console.
+
+State vs Task confusion
+Pipeline stages, forms, and approvals mix status, requirements, and actions in the same places.
+
+If you fix those three, this becomes a calm, best-in-class system.
+
+1. Roles: Your First Major Win (You Did This Right)
+
+Your role definitions are strong and realistic. The problem is not the roles — it is that they all see the same universe.
+
+Critical Principle You Must Enforce
+
+No role should have more than ONE “home screen” and TWO secondary screens for daily work.
+
+Right now, most roles effectively have access to 10–15 conceptual surfaces, which is where overwhelm comes from.
+
+What Each Role Actually Needs (UI-Enforced)
+Intake Staff
+
+Daily surface (only):
+
+Intake flow (step-based, draftable)
+
+Pipeline (read-only except Intake → Next)
+
+Must NOT see:
+
+Analytics
+
+Applications
+
+Foster
+
+Automations
+
+Plugins
+
+Donations
+
+Key fix:
+Turn /shelter/intake into a wizard + drafts, not a form.
+
+Vet Tech / Medical
+
+Daily surface:
+
+Medical queue (filtered dogs needing action)
+
+Dog medical record (single consolidated timeline)
+
+Must NOT see:
+
+Applications
+
+Foster
+
+Tasks (unless medical tasks only)
+
+Pipeline drag controls
+
+Key fix:
+Medical is not a section, it is a queue + alerts system.
+
+Behavior Specialist
+
+Daily surface:
+
+Behavior queue
+
+Standardized scorecard (short)
+
+Must NOT see:
+
+Intake
+
+Applications
+
+Foster
+
+Analytics
+
+Key fix:
+Behavior should feel like a checklist + flags, not documentation.
+
+Foster Coordinator
+
+Daily surface:
+
+Foster capacity dashboard
+
+Pending matches / approvals
+
+Must NOT see:
+
+Medical internals
+
+Behavior internals (only summaries)
+
+Pipeline mechanics
+
+Key fix:
+Capacity visibility > feature depth.
+
+Adoption Counselor
+
+Daily surface:
+
+Application inbox (prioritized)
+
+Meet-and-greet scheduler
+
+Must NOT see:
+
+Intake
+
+Medical internals
+
+Automations
+
+Bulk operations
+
+Key fix:
+Application review must collapse into one decision screen.
+
+Shelter Admin / Owner
+
+Daily surface:
+
+“Needs Attention Now” dashboard
+
+Approval queue (only blocked items)
+
+Occasional:
+
+Staff
+
+Analytics
+
+Settings
+
+Key fix:
+Admins should never hunt for problems.
+
+Volunteer
+
+Daily surface:
+
+Mobile activity log
+
+Check-in / check-out
+
+Must NOT see almost everything else.
+
+2. Navigation: You Are 100% Right — This Is the Big One
+Current Problem
+
+You have 20+ top-level shelter routes, which is enterprise-ERP territory.
+
+This violates a fundamental CRM UX rule:
+
+If everything is top-level, nothing is important.
+
+Immediate Navigation Consolidation (Do This)
+Collapse These Immediately
+Current	Action
+/shelter/applications + /shelter/applications-crm	Merge → /shelter/applications
+/shelter/dogs + /shelter/operations	Merge → /shelter/pipeline
+/shelter/pipeline + /shelter/operations	One concept
+/shelter/tasks	Absorb into role queues
+/shelter/calendar	Contextual, not global
+/shelter/resources	Remove from nav
+/shelter/donations	Remove (non-core)
+/shelter/plugins	Admin only
+/shelter/automation	Admin only
+/shelter/bulk-operations	Hidden power action
+Target Shelter Nav (Max 7 Items)
+
+For most staff:
+
+Dashboard (role-specific)
+
+Pipeline
+
+Intake (if permitted)
+
+Applications (if permitted)
+
+Medical (if permitted)
+
+Foster (if permitted)
+
+Inbox
+
+Everything else is:
+
+Contextual
+
+Permission-gated
+
+Or hidden behind “Admin”
+
+This alone will make the system feel half as complex overnight.
+
+3. Pipeline: You Are Right, and This Is Fixable
+Key Insight
+
+Your pipeline is doing three jobs at once:
+
+State
+
+Validation
+
+Documentation
+
+That creates friction.
+
+Fix the Stage Model
+Merge These
+
+❌ Ready for Adoption
+
+❌ Listed / Available
+
+Replace With
+
+✅ Adoptable (Auto-Qualified)
+
+Why:
+“Ready” is a system state. “Listed” is a UI state. Users should not manage both.
+
+Make Transitions Automatic
+Auto-Transitions (No Dragging)
+
+Intake → Medical Eval (on intake submit)
+
+Medical Eval → Behavior (when medical cleared)
+
+Behavior → Adoptable (when score complete)
+
+Adoptable → Adoption Pending (on approval)
+
+Pending → Adopted (on completion)
+
+Manual Dragging Only For:
+
+Exceptional cases
+
+Overrides (Admin only)
+
+Blockers Must Be Visible
+
+Every blocked dog card needs:
+
+🔴 WHY blocked
+
+✅ What clears it
+
+⏳ Who owns it
+
+This is critical.
+
+4. Data Entry: Your Pain Points Are Correct
+Immediate Fixes You Need
+
+Intake = Draftable
+
+Progressive Disclosure
+
+Minimum Viable Intake
+
+Intake Should Require ONLY:
+
+Intake type
+
+Photo
+
+Approx age
+
+Sex
+
+Kennel
+
+Everything else:
+
+Suggested
+
+Auto-filled
+
+Deferred
+
+Your instinct here is exactly right.
+
+5. Features You’re Uncomfortable Cutting — My Call
+
+I’ll be blunt.
+
+Cut or Remove from Core CRM
+
+Donation tracking
+
+Virtual tour scheduler
+
+Day-in-life videos
+
+Marketplace checkout (move to public app)
+
+Google Tasks panel
+
+These are adjacent products, not CRM core.
+
+Keep (But Stage Later)
+
+Volunteer management (phase 2)
+
+Foster discovery map (optional)
+
+Marketing templates (admin only)
+
+AI document intelligence (power feature)
+
+Absolutely Keep (Your Moat)
+
+Pipeline / Kanban (with fixes)
+
+AI matching
+
+Conversation threading
+
+Health screening scanner
+
+These are your category-defining differentiators.
+
+Final Verdict
+
+Your CRM is not bloated.
+It is over-exposed.
+
+By:
+
+Reducing nav surface
+
+Enforcing role intent at UI level
+
+Automating pipeline transitions
+
+Introducing progressive disclosure
+
+You will get:
+
+Faster staff adoption
+
+Less training required
+
+Lower cognitive load
+
+A product that feels calm, modern, and professional

@@ -1,0 +1,314 @@
+Awesome—here’s a tight, production-ready UI kit + CSS design system you can drop into your Replit app. It’s Tailwind-first, shadcn-friendly, and optimized for a “Zillow-meets-Tinder” adoption flow (swipe deck + map + filters + toasts).
+
+Design Tokens (Tailwind)
+
+tailwind.config.ts (extends theme + animations)
+
+import type { Config } from "tailwindcss";
+
+export default {
+  darkMode: ["class"],
+  content: ["./index.html","./client/src/**/*.{ts,tsx,js,jsx}"],
+  theme: {
+    extend: {
+      colors: {
+        brand: {
+          50:"#f5fbf8",100:"#e7f6ef",200:"#c8eadb",300:"#9fd7c0",
+          400:"#66be9a",500:"#2fa97a",600:"#238a63",700:"#1e7053",
+          800:"#195a44",900:"#134235"
+        },
+        accent: { 500:"#ff7a59" }, // warm, friendly
+        ink: { 900:"#0b1115", 700:"#1c252b", 500:"#5b6b76", 300:"#9fb1bd" }
+      },
+      boxShadow: {
+        card: "0 10px 30px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.04)"
+      },
+      borderRadius: { xl: "1rem", "2xl": "1.25rem" },
+      keyframes: {
+        wag: { "0%,100%":{transform:"rotate(0deg)"}, "50%":{transform:"rotate(10deg)"} },
+        pop: { "0%":{transform:"scale(.9)",opacity:0},"100%":{transform:"scale(1)",opacity:1} },
+        slideUp: { "0%":{transform:"translateY(8px)",opacity:0},"100%":{transform:"translateY(0)",opacity:1} },
+      },
+      animation: {
+        wag: "wag .6s ease-in-out infinite",
+        pop: "pop .18s ease-out both",
+        slideUp: "slideUp .22s ease-out both",
+      }
+    }
+  },
+  plugins: [
+    function({ addComponents, theme }) {
+      addComponents({
+        ".card": {
+          "@apply bg-white/80 dark:bg-ink-700/70 backdrop-blur-md rounded-2xl shadow-card border border-white/20 dark:border-ink-700/40":{}
+        },
+        ".btn": {
+          "@apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 font-medium transition active:scale-[.98]":{}
+        },
+        ".btn-primary": {
+          "@apply btn bg-brand-600 text-white hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400":{}
+        },
+        ".btn-ghost": {
+          "@apply btn bg-white/60 dark:bg-ink-700/60 hover:bg-white/80 dark:hover:bg-ink-700/80":{}
+        },
+        ".chip": {
+          "@apply inline-flex items-center gap-1 rounded-full bg-ink-900/5 dark:bg-white/10 px-3 py-1 text-sm":{}
+        }
+      });
+    }
+  ]
+} satisfies Config;
+
+App Layout
+
+Responsive split: swipe deck (left on desktop / full on mobile) + map drawer.
+
+// AppShell.tsx
+export default function AppShell({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="min-h-dvh bg-gradient-to-b from-brand-50 to-white dark:from-ink-900 dark:to-ink-700">
+      <header className="sticky top-0 z-50 backdrop-blur bg-white/60 dark:bg-ink-900/40 border-b border-white/30 dark:border-ink-700/60">
+        <div className="mx-auto max-w-6xl px-4 py-3 flex items-center gap-3">
+          <span className="text-xl font-semibold text-ink-900 dark:text-white">🐾 Scout</span>
+          <div className="ml-auto flex items-center gap-2">
+            <RadiusSelect />
+            <button className="btn-ghost">Notifications</button>
+            <button className="btn-primary">Post a Dog</button>
+          </div>
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-6xl px-4 py-6 grid grid-cols-1 lg:grid-cols-[1.1fr_.9fr] gap-6">
+        {children}
+      </main>
+    </div>
+  );
+}
+
+Swipe Deck (Tinder-style)
+
+Core interactions: drag, like/nope buttons, progress dots, subtle physics.
+Uses Framer Motion (already available on Replit).
+
+// SwipeDeck.tsx
+import { motion, useMotionValue, useTransform } from "framer-motion";
+import { useState } from "react";
+
+type Dog = {
+  id:string; name:string; age:string; breed:string;
+  distance:number; energy:"low"|"medium"|"high";
+  goodWithKids?:boolean; images:string[]; shelter:string;
+};
+
+export default function SwipeDeck({ dogs, onLike, onNope }:{
+  dogs: Dog[]; onLike:(d:Dog)=>void; onNope:(d:Dog)=>void;
+}) {
+  const [stack, setStack] = useState(dogs);
+
+  function handleDecision(dog:Dog, dir:"like"|"nope") {
+    setStack(prev => prev.slice(1));
+    dir === "like" ? onLike(dog) : onNope(dog);
+  }
+
+  return (
+    <div className="relative aspect-[3/4] w-full max-w-md mx-auto">
+      {stack.slice(0,3).map((dog, i) => (
+        <SwipeCard
+          key={dog.id}
+          dog={dog}
+          index={i}
+          onDecision={(dir)=>handleDecision(dog,dir)}
+        />
+      ))}
+
+      <div className="mt-4 flex items-center justify-center gap-4">
+        <button
+          onClick={()=>stack[0] && handleDecision(stack[0], "nope")}
+          className="btn-ghost rounded-full p-4"
+          aria-label="Nope"
+        >👎</button>
+        <button
+          onClick={()=>stack[0] && handleDecision(stack[0], "like")}
+          className="btn-primary rounded-full p-4"
+          aria-label="Like"
+        >💚</button>
+      </div>
+    </div>
+  );
+}
+
+function SwipeCard({ dog, index, onDecision }:{
+  dog:Dog; index:number; onDecision:(dir:"like"|"nope")=>void;
+}) {
+  const x = useMotionValue(0);
+  const rotate = useTransform(x, [-200, 200], [-12, 12]);
+  const likeOpacity = useTransform(x, [40, 140], [0, 1]);
+  const nopeOpacity = useTransform(x, [-140, -40], [1, 0]);
+
+  return (
+    <motion.div
+      className="card absolute inset-0 overflow-hidden"
+      style={{ x, rotate, zIndex: 10 - index, scale: 1 - index * 0.04, top: index * 8, }}
+      drag="x"
+      dragConstraints={{ left: 0, right: 0 }}
+      dragElastic={0.4}
+      onDragEnd={(_, info) => {
+        if (info.offset.x > 150) onDecision("like");
+        else if (info.offset.x < -150) onDecision("nope");
+      }}
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ type:"spring", stiffness: 220, damping: 22 }}
+    >
+      <img src={dog.images[0]} alt={`${dog.name}`} className="h-2/3 w-full object-cover" />
+      <div className="p-4 space-y-2">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-ink-900 dark:text-white">
+            {dog.name} <span className="text-ink-500">• {dog.age}</span>
+          </h3>
+          <span className="chip" title="Distance">{dog.distance} mi</span>
+        </div>
+        <div className="text-ink-700 dark:text-ink-300">
+          {dog.breed} • {labelEnergy(dog.energy)} {dog.goodWithKids && "• good with kids"}
+        </div>
+        <div className="flex gap-2 pt-1">
+          <span className="chip">🏠 {dog.shelter}</span>
+          <EnergyPill level={dog.energy} />
+        </div>
+      </div>
+
+      {/* Like / Nope badges */}
+      <motion.div className="absolute top-4 left-4 rounded-lg border-2 border-brand-500/80 px-3 py-1 text-brand-600 font-bold"
+        style={{ opacity: likeOpacity }}>
+        LIKE
+      </motion.div>
+      <motion.div className="absolute top-4 right-4 rounded-lg border-2 border-accent-500/80 px-3 py-1 text-accent-500 font-bold"
+        style={{ opacity: nopeOpacity }}>
+        NOPE
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function EnergyPill({ level }:{level:"low"|"medium"|"high"}) {
+  const text = level === "low" ? "Chill" : level === "medium" ? "Playful" : "High-energy";
+  const tone = level === "low" ? "bg-emerald-100 text-emerald-800"
+             : level === "medium" ? "bg-amber-100 text-amber-800"
+             : "bg-rose-100 text-rose-800";
+  return <span className={`chip ${tone}`}>⚡ {text}</span>;
+}
+function labelEnergy(l:"low"|"medium"|"high"){ return l==="low"?"low energy":l==="medium"?"medium":"high energy"; }
+
+Map + Drawer (Zillow-style)
+// MapPanel.tsx
+export default function MapPanel() {
+  return (
+    <aside className="card h-[70vh] lg:h-[calc(100vh-140px)] p-2">
+      {/* Replace with actual map (Leaflet, Mapbox, or Google) */}
+      <div className="h-full w-full rounded-xl bg-ink-900/5 dark:bg-white/10 grid place-content-center text-ink-500">
+        Map goes here
+      </div>
+    </aside>
+  );
+}
+
+
+Mobile drawer (open on “See on Map”):
+
+// MapDrawer.tsx
+export function MapDrawer({ open, onClose, children }:{ open:boolean; onClose:()=>void; children:React.ReactNode; }) {
+  return (
+    <div className={`fixed inset-0 z-[60] ${open? "pointer-events-auto":"pointer-events-none"}`}>
+      <div className={`absolute inset-0 bg-black/40 transition ${open?"opacity-100":"opacity-0"}`} onClick={onClose}/>
+      <div className={`absolute bottom-0 left-0 right-0 bg-white dark:bg-ink-800 rounded-t-2xl shadow-card p-3 transition-transform ${open?"translate-y-0":"translate-y-full"}`}>
+        <div className="h-[60vh]">{children}</div>
+      </div>
+    </div>
+  );
+}
+
+Filters, Chips & Controls
+// FiltersBar.tsx
+export function FiltersBar() {
+  return (
+    <div className="card px-3 py-2 flex flex-wrap gap-2">
+      <button className="chip">📍 Within 25 mi</button>
+      <button className="chip">🐶 Medium</button>
+      <button className="chip">👧 Good w/ kids</button>
+      <button className="chip">🏃 High-energy</button>
+      <button className="btn-ghost ml-auto">Reset</button>
+    </div>
+  );
+}
+
+Match Toast (ethical, gentle reinforcement)
+// MatchToast.tsx
+export function MatchToast({ name, onAction }:{ name:string; onAction:()=>void }) {
+  return (
+    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 card px-4 py-3 flex items-center gap-3 animate-slideUp">
+      <span className="text-xl">💚</span>
+      <div>
+        <div className="font-semibold">Great match!</div>
+        <div className="text-sm text-ink-500">Want to schedule a visit with {name}?</div>
+      </div>
+      <button className="btn-primary ml-2" onClick={onAction}>Schedule</button>
+    </div>
+  );
+}
+
+Skeletons & Empty State
+// SkeletonCard.tsx
+export function SkeletonCard(){
+  return (
+    <div className="card animate-pulse overflow-hidden aspect-[3/4] max-w-md mx-auto">
+      <div className="h-2/3 bg-ink-900/5 dark:bg-white/10" />
+      <div className="p-4 space-y-2">
+        <div className="h-5 w-2/3 bg-ink-900/5 dark:bg-white/10 rounded" />
+        <div className="h-4 w-1/2 bg-ink-900/5 dark:bg-white/10 rounded" />
+        <div className="flex gap-2 pt-1">
+          <div className="h-6 w-24 bg-ink-900/5 dark:bg-white/10 rounded-full" />
+          <div className="h-6 w-28 bg-ink-900/5 dark:bg-white/10 rounded-full" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// EmptyState.tsx
+export function EmptyState(){
+  return (
+    <div className="card p-8 text-center">
+      <div className="text-5xl mb-3">🐕</div>
+      <h3 className="text-lg font-semibold">No more dogs in this radius (for now)</h3>
+      <p className="text-ink-500 mt-1">Try expanding your distance or adjusting filters.</p>
+      <div className="mt-4 flex justify-center gap-2">
+        <button className="btn-ghost">Adjust Filters</button>
+        <button className="btn-primary">Increase Radius</button>
+      </div>
+    </div>
+  );
+}
+
+Micro-Interactions (CSS Helpers)
+
+Add these to a small CSS file loaded after Tailwind (or put in @layer utilities):
+
+/* utilities.css */
+.badge-dot {
+  position: relative;
+}
+.badge-dot::after {
+  content: "";
+  position: absolute; top: 0; right: 0;
+  width: 8px; height: 8px; border-radius: 9999px; background: #ff7a59;
+  box-shadow: 0 0 0 2px white;
+  animation: pulseDot 1.4s ease-in-out infinite;
+}
+@keyframes pulseDot {
+  0% { transform: scale(0.9); opacity: .9; }
+  50% { transform: scale(1.2); opacity: .6; }
+  100% { transform: scale(0.9); opacity: .9; }
+}
+
+/* subtle hover lift for cards */
+.card:hover { transform: translateY(-1px); transition: transform .18s ease; }

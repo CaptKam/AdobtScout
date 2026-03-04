@@ -1,0 +1,267 @@
+⭐ 1. Use a Virtualized, Composable Architecture
+
+Heavy pipelines lag because every card renders at once.
+
+🔥 Guideline:
+
+Use virtualization for card lists:
+
+import { Virtuoso } from 'react-virtuoso';
+
+
+Each column should wrap the card list like:
+
+<Virtuoso
+  data={dogsInStage}
+  itemContent={(index, dog) => <DogCard dog={dog} />}
+  overscan={100}
+  style={{ height: "100%" }}
+/>
+
+Benefits:
+
+Smooth scrolling
+
+Low memory usage
+
+Allows 300+ cards without FPS drops
+
+⭐ 2. Use a Drag Library Built for Pipelines
+
+Use @dnd-kit (not React DnD or react-beautiful-dnd — both are outdated/heavy).
+
+npm install @dnd-kit/core @dnd-kit/sortable @dnd-kit/modifiers
+
+Why?
+
+Best-in-class performance
+
+Custom animations
+
+Collision detection
+
+Works perfectly with virtualization
+
+Smooth “card lift” animation
+
+⭐ 3. Define Column & Card as Independent, Declarative Components
+Column Component:
+interface PipelineColumnProps {
+  stage: PipelineStage;
+  dogs: DogRecord[];
+}
+
+export function PipelineColumn({ stage, dogs }: PipelineColumnProps) {
+  return (
+    <div className="w-[350px] bg-gray-50 rounded-lg border mr-4 flex flex-col">
+      <ColumnHeader stage={stage} count={dogs.length} />
+      <DogCardList dogs={dogs} />
+    </div>
+  );
+}
+
+Dog Card Component:
+export function DogCard({ dog }: { dog: DogRecord }) {
+  return (
+    <div className="p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-all cursor-pointer">
+      <DogCardContent dog={dog} />
+    </div>
+  );
+}
+
+Why?
+
+Decoupling = smooth UI updates
+
+Cards don't re-render entire columns
+
+Columns don't re-render entire pipeline
+
+⭐ 4. Use Optimistic UI for Snappy Dragging
+
+Dragging should feel instant, even before the backend saves it.
+
+UX rule:
+
+Move the card client-side immediately
+
+Save asynchronously in background
+
+Roll back only on error (rare)
+
+Code pattern:
+async function moveDog(dogId, toStage) {
+  // 1. Optimistic update
+  setPipeline((prev) => moveDogLocally(prev, dogId, toStage));
+
+  // 2. Send request
+  const res = await fetch(`/api/pipeline/move`, {
+    method: 'POST',
+    body: JSON.stringify({ dogId, toStage }),
+  });
+
+  if (!res.ok) {
+    // 3. Roll back on failure
+    setPipeline(previousState);
+  }
+}
+
+
+This reduces drag latency from 150–300ms → 0ms.
+
+⭐ 5. Use Tailwind Motion Classes for Smooth Animations
+
+Card hover:
+
+className="transition-all duration-150 ease-in-out hover:shadow-md hover:-translate-y-1"
+
+
+Card lift during drag:
+
+style={{
+  transition: "transform 0.15s cubic-bezier(0.25, 0.8, 0.25, 1)",
+  boxShadow: isDragging ? "0 8px 20px rgba(0,0,0,0.12)" : undefined,
+  transform: isDragging ? "scale(1.02)" : "scale(1)",
+}}
+
+
+Dropping animation (spring effect):
+
+animate={{
+  y: 0,
+  transition: { type: "spring", stiffness: 300, damping: 25 },
+}}
+
+⭐ 6. Throttle Pipeline Re-Renders
+
+Do not re-render entire pipeline every drag movement.
+
+Use memoization:
+
+const PipelineColumn = React.memo(function PipelineColumn({ stage, dogs }) {
+  ...
+});
+
+
+Also memoize dog card:
+
+export const DogCard = React.memo(DogCardComponent);
+
+
+Big performance boost.
+
+⭐ 7. Use a Global Pipeline Store (Zustand or Jotai)
+
+Avoid prop drilling and parent re-renders.
+
+Example with Zustand:
+
+export const usePipeline = create((set) => ({
+  stages: [],
+  moveDog: (dogId, toStage) => { ... },
+}));
+
+Why?
+
+Instant drag updates
+
+No React lag from parent components
+
+Better for flyout + drag working together
+
+⭐ 8. Keep Active Drag Ghost on a Portal Layer
+
+This prevents drag jank when columns re-render.
+
+<DndContext
+  sensors={sensors}
+  collisionDetection={closestCorners}
+  modifiers={[restrictToWindowEdges]}
+>
+  <DragOverlay>
+    {activeId ? <DogCard dog={dogMap[activeId]} isDragging /> : null}
+  </DragOverlay>
+</DndContext>
+
+
+This ensures smooth floating card effect.
+
+⭐ 9. Use Partial Rendering for the Flyout Panel
+
+Flyout should not block pipeline rendering.
+
+Example:
+
+<Suspense fallback={null}>
+  {selectedDogId && <DogFlyout dogId={selectedDogId} />}
+</Suspense>
+
+UX benefit:
+
+Pipeline stays visible + active
+Drag still works even with the panel open
+
+⭐ 10. Use Event Debouncing for Pipeline Auto-Saving
+
+When dragging 20 cards quickly, avoid flooding your backend.
+
+const debouncedSave = useCallback(
+  debounce((payload) => savePipeline(payload), 400),
+  []
+);
+
+⭐ 11. Add Animation State Machines for Stage Transitions
+
+Use framer-motion:
+
+<motion.div
+  layout
+  transition={{ duration: 0.2 }}
+  className="..."
+>
+
+This gives:
+
+Smooth reorder
+
+No jitter
+
+Natural animations
+
+⭐ 12. Use Activity Logs as Separate Workers
+
+Log changes in a separate endpoint:
+
+POST /api/activity-log
+
+
+Do NOT block drag/drop on logging or saving.
+
+⭐ 13. Prefetch Dog Details When Hovering a Card
+
+Use React 18’s useTransition:
+
+const [startTransition] = useTransition();
+
+function prefetchDog(dogId) {
+  startTransition(() => {
+    queryClient.prefetchQuery(["dog", dogId], () => fetchDog(dogId));
+  });
+}
+
+
+This makes the flyout open instantly.
+
+⭐ 14. Smooth Scroll UX for Horizontal Pipeline
+
+Use momentum scrolling:
+
+className="overflow-x-auto scroll-smooth snap-x snap-mandatory"
+
+
+Add scroll indicators:
+
+shadow-[inset_0_0_10px_rgba(0,0,0,0.1)]
+
+
+This makes the whole pipeline feel modern.

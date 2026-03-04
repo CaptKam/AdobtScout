@@ -1,0 +1,339 @@
+🐾 1. Shelter Manager / Director
+
+Role: Operations, compliance, outcomes, people
+
+7:30–8:30 AM — Open & Triage
+
+Checks overnight notes (medical issues, emergencies)
+
+Reviews:
+
+Dogs stuck too long in intake or medical
+
+Staffing gaps for the day
+
+Critical supplies (food, meds, kennel space)
+
+Makes quick decisions:
+
+Intake pause?
+
+Emergency foster call?
+
+Vet escalation?
+
+Stress point: Everything feels urgent. No clear “what matters most.”
+
+9:00–11:00 AM — Decision Work
+
+Approves:
+
+Adoptions
+
+Euthanasia decisions (hardest part)
+
+Transfers to partner rescues
+
+Handles angry emails or public complaints
+
+Meets with medical lead or behavior team
+
+What software should do
+
+Surface only true blockers
+
+Show length-of-stay risks
+
+Make consequences visible (e.g., “3 dogs at risk this week”)
+
+1:00–3:00 PM — Admin & Strategy
+
+Budget, grants, donors
+
+City/county reporting
+
+Board communication
+
+Crisis prevention
+
+Biggest pain: Drowning in reports that don’t drive action.
+
+4:00–6:00 PM — Firefighting
+
+Intake surprises
+
+Staff burnout
+
+Medical complications
+
+Foster failures
+
+Manager success = fewer surprises
+
+🩺 2. Veterinary / Medical Staff
+
+Role: Keep animals healthy enough to move forward
+
+8:00–9:00 AM — Medical Rounds
+
+Walk kennel rows
+
+Identify:
+
+Sick dogs
+
+Weight loss
+
+Behavioral stress from illness
+
+Prioritize who must be seen today
+
+Stress point: Too many animals, not enough time.
+
+9:30–12:00 PM — Treatments
+
+Vaccines
+
+Medications
+
+Wound care
+
+Intake exams
+
+Record keeping (often rushed)
+
+Pain
+
+Duplicate data entry
+
+Forgetting follow-ups
+
+No visibility into downstream impact
+
+1:00–3:00 PM — Procedures
+
+Spay/neuter prep
+
+Surgery
+
+Recovery checks
+
+3:00–5:00 PM — Documentation & Planning
+
+Log treatments
+
+Schedule next doses
+
+Flag animals not ready for adoption
+
+What software should do
+
+Auto-schedule next steps
+
+Prevent dogs from advancing prematurely
+
+Reduce documentation friction
+
+🧠 3. Behavior Team / Trainers
+
+Role: Decide if a dog is adoptable and how
+
+Morning — Observation
+
+Watch dogs in kennels
+
+Note:
+
+Reactivity
+
+Fear
+
+Aggression
+
+Improvement or regression
+
+Stress
+
+One bad call can mean a returned adoption or bite incident
+
+Midday — Evaluations
+
+Formal behavior assessments
+
+Dog-to-dog tests
+
+Human interaction tests
+
+Afternoon — Plans & Notes
+
+Create behavior plans
+
+Recommend foster vs adoption vs rescue transfer
+
+Communicate risks to adoption team
+
+What software should do
+
+Track behavior over time (not just one score)
+
+Show context (medical, length of stay)
+
+Prevent “checkbox behavior scoring”
+
+🐕 4. Animal Care Attendants / Kennel Staff
+
+Role: Daily care and cleaning (the backbone of the shelter)
+
+7:00–11:00 AM — Cleaning & Feeding
+
+Clean kennels
+
+Feed animals
+
+Walk dogs
+
+Spot health issues early
+
+Stress
+
+Physically exhausting
+
+Emotionally heavy
+
+Often underpaid
+
+Midday — Enrichment & Support
+
+Socialization
+
+Playgroups
+
+Basic training
+
+Assist medical/behavior teams
+
+Late Afternoon — Reset
+
+Re-clean
+
+Prep for next day
+
+Update notes (often minimal time)
+
+What software should do
+
+Simple checklists
+
+Minimal typing
+
+Voice notes or quick taps
+
+🏡 5. Foster Coordinator
+
+Role: Keep animals out of kennels
+
+Morning — Foster Check-ins
+
+Follow up on:
+
+Medical fosters
+
+Behavior fosters
+
+Emergency placements
+
+Manage returns or issues
+
+Midday — Matching
+
+Match dogs to fosters
+
+Train new fosters
+
+Coordinate supplies
+
+Afternoon — Crisis Management
+
+“I can’t keep the dog”
+
+“The dog is sick”
+
+“The dog bit my cat”
+
+Stress
+
+High emotional labor
+
+Constant urgency
+
+What software should do
+
+Show foster capacity clearly
+
+Track foster risk
+
+Reduce last-minute emergencies
+
+❤️ 6. Adoption Counselors / Front Desk
+
+Role: Match animals with people (and prevent returns)
+
+Opening — Applications
+
+Review new applications
+
+Flag red/yellow/green
+
+Schedule meet & greets
+
+Midday — Meet & Greets
+
+Introduce dogs to families
+
+Answer hard questions
+
+Manage expectations
+
+Late Day — Follow-ups
+
+Rejections
+
+Approvals
+
+Education
+
+Documentation
+
+Stress
+
+Emotional customers
+
+Fear of making the wrong match
+
+What software should do
+
+Show dog readiness clearly
+
+Surface risks honestly
+
+Reduce back-and-forth
+
+🧑‍🤝‍🧑 7. Volunteers
+
+Role: Multiply capacity
+
+When They Arrive
+
+Need clear instructions
+
+Need simple tasks
+
+Need to feel useful
+
+What software should do
+
+Show “what needs help right now”
+
+Avoid overwhelming detail
+
+Keep permissions tight

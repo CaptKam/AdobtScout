@@ -1,0 +1,141 @@
+stateDiagram
+  direction TB
+
+  %% ======================
+  %% ENTRY
+  %% ======================
+  [*] --> UserSignup : New User Arrives
+
+  %% ======================
+  %% USER SIGNUP
+  %% ======================
+  state UserSignup {
+    direction TB
+    [*] --> RoleSelection : Choose Role
+
+    RoleSelection --> AdopterPath : Adopter
+    RoleSelection --> ShelterPath : Shelter
+    RoleSelection --> FosterPath  : Foster
+  }
+
+  %% ======================
+  %% ADOPTER PATH (AUTO)
+  %% ======================
+  state AdopterPath {
+    direction TB
+    [*] --> ProfileCreation : Complete Profile
+    ProfileCreation --> AutoApproved : Profile Complete
+    AutoApproved --> CanBrowse : Ready to Discover
+
+    note right of AutoApproved
+      Owner: System / AI
+      No admin approval required
+    end note
+  }
+
+  %% ======================
+  %% SHELTER PATH
+  %% ======================
+  state ShelterPath {
+    direction TB
+    [*] --> ShelterOnboarding : Enter Shelter Info
+    ShelterOnboarding --> PendingApproval : Awaiting Review
+
+    state PendingApproval {
+      direction TB
+      [*] --> AdminReview : Verify Shelter Details
+      AdminReview --> Approved : Verification Passed
+      AdminReview --> Rejected : Verification Failed
+
+      note right of AdminReview
+        Owner: Platform Admin
+        High liability + org-level trust
+      end note
+    }
+  }
+
+  %% ======================
+  %% FOSTER PATH
+  %% ======================
+  state FosterPath {
+    direction TB
+    [*] --> FosterOnboarding : Complete Foster Profile
+    FosterOnboarding --> FosterPending : Awaiting Approval
+
+    state FosterPending {
+      direction TB
+      [*] --> AdminFosterReview : Review Foster Application
+      AdminFosterReview --> FosterApproved : Passed Checks
+      AdminFosterReview --> FosterRejected : Not Approved
+
+      note right of AdminFosterReview
+        Owner: Trust & Safety Admin
+        Background + risk screening
+      end note
+    }
+  }
+
+  %% ======================
+  %% APPLICATION FLOW
+  %% ======================
+  state ApplicationFlow {
+    direction TB
+    [*] --> UserSwipes : Browse Dogs
+    UserSwipes --> ApplicationSubmitted : Submit Application
+    ApplicationSubmitted --> PendingReview : In Review Queue
+
+    PendingReview --> ApplicationApproved : Approved
+    PendingReview --> ApplicationRejected : Rejected
+    PendingReview --> NeedsMoreInfo : Request Info
+    NeedsMoreInfo --> PendingReview : Info Provided
+
+    %% ---- REVIEW PIPELINE ----
+    state PendingReview {
+      direction TB
+      [*] --> AIReview : AI Screening
+      AIReview --> PhoneScreening : Schedule AI Call
+      PhoneScreening --> TranscriptReview : Call Complete
+      TranscriptReview --> AdminApplicationReview : Human Review
+
+      note right of AIReview
+        Owner: System / AI
+        Eligibility pre-filter
+      end note
+
+      note right of PhoneScreening
+        Owner: AI Agent
+        Standardized screening
+      end note
+
+      state AdminApplicationReview {
+        direction TB
+        [*] --> CheckResponses : Review Application
+        CheckResponses --> CheckAI : Review AI Score
+        CheckAI --> CheckTranscript : Review Transcript
+        CheckTranscript --> Decision : Final Eligibility Decision
+
+        note right of Decision
+          Owner: Trust & Safety Admin
+          Determines platform eligibility
+        end note
+      }
+    }
+  }
+
+  %% ======================
+  %% POST-APPROVAL FLOW
+  %% ======================
+  ApplicationApproved --> MeetGreet : Schedule Visit
+  MeetGreet --> ReadyForCheckout : Visit Complete
+  ReadyForCheckout --> Completed : Adoption Finalized
+
+  note right of MeetGreet
+    Owner: Shelter Admin
+    Dog-specific approval
+  end note
+
+  %% ======================
+  %% TERMINATION
+  %% ======================
+  ApplicationRejected --> [*]
+  Completed --> [*]

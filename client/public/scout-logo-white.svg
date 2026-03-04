@@ -1,0 +1,8 @@
+
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- White background circle -->
+  <rect width="120" height="120" rx="24" fill="white"/>
+  
+  <!-- Orange heart icon -->
+  <path d="M60 95C60 95 25 72.5 25 50C25 38.9543 33.9543 30 45 30C51.6274 30 57.5 33.5 60 38.5C62.5 33.5 68.3726 30 75 30C86.0457 30 95 38.9543 95 50C95 72.5 60 95 60 95Z" fill="hsl(24, 90%, 48%)"/>
+</svg>

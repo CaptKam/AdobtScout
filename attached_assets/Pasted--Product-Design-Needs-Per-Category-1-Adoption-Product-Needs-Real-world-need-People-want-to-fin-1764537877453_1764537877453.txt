@@ -1,0 +1,119 @@
+✅ Product Design Needs Per Category
+1. Adoption — Product Needs
+
+Real-world need:
+People want to find a dog that truly fits their life (not just looks cute).
+
+Design Requirements
+
+Replit should build:
+
+Matching engine (lifestyle → dog personality)
+
+Accurate dog profiles (age, energy, temperament, behaviors, training level)
+
+Saved search alerts
+
+Swipe / browsing UX
+
+Chat or message system with shelters
+
+Scheduling meet-and-greets
+
+Fraud & repeat scammer protection
+
+AI assistant to guide first-time adopters
+
+Primary outcome Replit must deliver:
+➡️ Reduce mismatch adoptions by ensuring compatibility.
+
+2. Rehoming — Product Needs
+
+Real-world need:
+Owners need a safe, judgment-free way to find a better home when life changes.
+
+Design Requirements
+
+Replit should build:
+
+Rehome onboarding flow (why, dog’s history, behaviors, triggers)
+
+Identity verification (KYC-lite)
+
+Safety screening to block backyard breeders or flippers
+
+AI rewriting engine to help owners describe their dog honestly
+
+Automatic matching with qualified adopters
+
+Owner-to-adopter chat system
+
+Optional anonymous mode
+
+Primary outcome Replit must deliver:
+➡️ Keep pets out of shelters by enabling safe, ethical rehoming directly.
+
+3. Fostering — Product Needs
+
+Real-world need:
+Temporary homes are the pressure valve that prevents shelter overcrowding.
+
+Design Requirements
+
+Replit should build:
+
+Emergency foster activation system
+(hurricanes, fires, intake surges, hoarding cases)
+
+Foster preference profiles
+(size, behavior level, medical ability)
+
+Short-term care timelines
+
+Daily check-in system with reminders
+
+Shelter → foster communication portal
+
+Map of nearby animals needing foster now
+
+AI instructions for medical/behavioral care
+
+Primary outcome Replit must deliver:
+➡️ Move animals into foster homes quickly to free shelter space and reduce euthanasia pressure.
+
+4. Shelters — Product Needs
+
+Real-world need:
+Shelters need time, efficiency, and accuracy more than anything else.
+
+Design Requirements
+
+Replit should build:
+
+Multi-user shelter dashboard
+(volunteers, directors, intake coordinators)
+
+Bulk upload of dogs
+
+API importer for Petfinder / RescueGroups
+
+Behavior notes system
+
+Medical record tracker
+
+Auto-posting to social & adoption sites
+
+AI assistant to:
+
+Write bios
+
+Suggest matches
+
+Screen adopter applications
+
+Triage questions
+
+Urgent animal alerts system
+
+Primary outcome Replit must deliver:
+➡️ Save shelters time so staff can focus on animals, not admin work.

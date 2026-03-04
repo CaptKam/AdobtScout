@@ -1,0 +1,241 @@
+The Correct Visual & Functional Hierarchy
+✅ Correct Top-Level Hierarchy (This Is the Fix)
+SHELTER CRM
+│
+├─ Pipeline  ← PRIMARY WORKSPACE (daily work happens here)
+│
+├─ Operations Hub  ← START / END OF DAY ONLY
+│
+├─ Inbox  ← DECISIONS & COMMUNICATION
+│
+├─ Automation  ← SYSTEM BRAIN (rarely touched)
+│
+├─ Management  ← CONFIG / ANALYTICS (rare)
+│
+└─ Dogs  ← SHOULD NOT BE PRIMARY
+
+
+Key change:
+👉 Dogs must be demoted from a top-level “workspace” to a supporting surface.
+
+What to Fix, Module by Module
+1. Pipeline — Promote to the Absolute Center
+What’s Right
+
+Visual flow
+
+Drag & drop
+
+Urgency indicators
+
+Performance stack
+
+What Must Change
+
+Pipeline must own dog interaction
+
+Clicking a dog must open a side panel, not navigate away
+
+80% of dog work must happen here
+
+Result
+
+Pipeline becomes:
+
+“Where shelter work happens”
+
+2. Dogs — Demote and Reframe
+Current Problem
+
+/shelter/dogs duplicates:
+
+Pipeline
+
+Operations Hub
+
+Inbox context
+
+This creates choice paralysis:
+
+“Should I go to Dogs or Pipeline?”
+
+Fix
+
+Reframe Dogs as:
+
+Search & reference, not daily work
+
+Dogs should be used for:
+
+Bulk operations
+
+Historical lookup
+
+Advanced filtering
+
+Audits
+
+Remove from Dogs:
+
+Task execution
+
+Pipeline movement
+
+Day-to-day decisions
+
+Rename internally (even if URL stays):
+
+Dog Directory or Dog Records
+
+3. Operations Hub — Keep, But Narrow Scope
+What Works
+
+Now / Next / Later
+
+Quick stats
+
+Start-of-day clarity
+
+Fix
+
+Operations Hub should:
+
+Never be where work happens
+
+Only route users to Pipeline or Inbox
+
+Add Explicit CTA Buttons:
+
+“Go to Pipeline (3 urgent)”
+
+“Review Inbox (2 pending apps)”
+
+4. Inbox — You Are Doing This Right (One Adjustment)
+What’s Excellent
+
+Unified applications + messages
+
+Status + priority
+
+Assignment
+
+One Fix
+
+Inbox must always show decision context first, message second.
+
+Visually:
+
+Dog card
+
+Applicant readiness
+
+Status actions
+
+Conversation
+
+Never invert this.
+
+5. Automation — Architecturally Correct, UX Needs Guardrails
+What’s Right
+
+Event-driven
+
+Rule templates
+
+Plugin architecture
+
+Required Fix
+
+Add human-readable automation logs everywhere:
+
+Dog timeline
+
+Task completion
+
+Pipeline movement
+
+Automation must never feel silent.
+
+6. Management Hub — This Is Fine, but Visually Separate It
+
+Your Management Hub is correct in content.
+
+UX Rule
+
+It must:
+
+Look different
+
+Feel heavier
+
+Be boring
+
+This prevents accidental operational misuse.
+
+The One Critical Structural Change You Must Make
+🚨 Add a Persistent Right-Side Dog Panel
+
+This is the missing crown jewel.
+
+Behavior
+
+Pipeline stays visible
+
+Dog panel slides in
+
+Tabs inside panel:
+
+Overview
+
+Tasks
+
+Medical
+
+Applications
+
+Foster
+
+History
+
+Result
+
+No page switching
+
+No lost context
+
+No “where do I go?”
+
+This is the difference between good CRM and elite CRM.
+
+Final Corrected Visual Hierarchy (Exact)
+TOP NAV
+│
+├─ Pipeline  ⭐ PRIMARY (always visible)
+│   └─ Dog Side Panel (all actions)
+│
+├─ Operations Hub (start/end of day)
+│
+├─ Inbox (decisions + communication)
+│
+├─ Automation (system brain)
+│
+└─ Management (configuration & analytics)
+
+
+Everything else is supporting, not primary.
+
+Why This Matters
+
+The best CRMs:
+
+Linear
+
+Stripe internal tools
+
+Modern ERP systems
+
+All share this trait:
+
+They eliminate choice about where work happens.
+
+You are one structural decision away from that tier.

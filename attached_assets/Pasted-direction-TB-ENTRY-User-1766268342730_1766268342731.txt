@@ -1,0 +1,180 @@
+
+stateDiagram-v2
+  direction TB
+
+  %% ======================
+  %% ENTRY POINT
+  %% ======================
+  [*] --> Landing : User Arrives at Scout
+
+  %% ======================
+  %% ROLE SELECTION
+  %% ======================
+  Landing --> RoleSelection : Click "Get Started"
+  
+  state RoleSelection {
+    direction TB
+    [*] --> ChooseRole : Select User Type
+    ChooseRole --> AdopterOnboarding : "I want to adopt"
+    ChooseRole --> ShelterLogin : "I'm a shelter"
+    ChooseRole --> OwnerOnboarding : "I need to rehome"
+  }
+
+  %% ======================
+  %% ADOPTER PATH (NO APPROVAL)
+  %% ======================
+  state AdopterOnboarding {
+    direction TB
+    [*] --> CreateAccount : Email/Password
+    CreateAccount --> CompleteProfile : Basic Info
+    CompleteProfile --> FamilyMembers : Add Family
+    FamilyMembers --> HouseholdPets : Current Pets
+    HouseholdPets --> Preferences : Set Preferences
+    Preferences --> AdopterReady : Profile Complete
+
+    note right of AdopterReady
+      Owner: System (Auto-Approved)
+      No admin review needed
+      Can browse immediately
+    end note
+  }
+
+  AdopterReady --> DiscoverMode : Start Browsing
+
+  %% ======================
+  %% DISCOVER MODE (ACTIVE USE)
+  %% ======================
+  state DiscoverMode {
+    direction TB
+    [*] --> SwipeDogs : Browse Available Dogs
+    SwipeDogs --> ViewProfile : Tap for Details
+    ViewProfile --> SwipeDogs : Continue Browsing
+    SwipeDogs --> SubmitApplication : Apply for Dog
+    
+    SubmitApplication --> ApplicationPending : Application Submitted
+  }
+
+  %% ======================
+  %% APPLICATION REVIEW FLOW
+  %% ======================
+  state ApplicationPending {
+    direction TB
+    [*] --> AIScreening : AI Eligibility Check
+    
+    AIScreening --> PhoneScreen : AI Pre-Qualifies
+    AIScreening --> AutoReject : Ineligible
+    
+    PhoneScreen --> VapiCall : AI Phone Interview
+    VapiCall --> TranscriptGenerated : Call Complete
+    
+    TranscriptGenerated --> ShelterReview : Shelter Reviews
+    
+    state ShelterReview {
+      direction TB
+      [*] --> ReviewApplication : Check Responses
+      ReviewApplication --> ReviewAIScore : View AI Analysis
+      ReviewAIScore --> ReviewTranscript : Read Call Summary
+      ReviewTranscript --> ShelterDecision : Approve/Reject/Request Info
+      
+      note right of ShelterDecision
+        Owner: Shelter Staff
+        Final adoption decision
+      end note
+    }
+    
+    ShelterReview --> Approved : Application Approved
+    ShelterReview --> Rejected : Application Rejected
+    ShelterReview --> MoreInfoNeeded : Request Additional Info
+    
+    MoreInfoNeeded --> ApplicationPending : Adopter Responds
+  }
+
+  %% ======================
+  %% POST-APPROVAL FLOW
+  %% ======================
+  Approved --> ScheduleMeetGreet : Schedule Visit
+  ScheduleMeetGreet --> MeetGreetComplete : Visit Successful
+  MeetGreetComplete --> CheckoutProcess : Proceed to Checkout
+
+  state CheckoutProcess {
+    direction TB
+    [*] --> PaymentStep : Process Adoption Fee
+    PaymentStep --> ContractStep : Sign Contract
+    ContractStep --> MicrochipStep : Transfer Microchip
+    MicrochipStep --> SuppliesStep : Provide Supplies
+    SuppliesStep --> AdoptionComplete : Finalize
+    
+    note right of AdoptionComplete
+      Owner: Shelter Staff
+      Completes in under 3 minutes
+    end note
+  }
+
+  AdoptionComplete --> [*] : Adoption Successful
+
+  %% ======================
+  %% SHELTER PATH
+  %% ======================
+  ShelterLogin --> ShelterAuth : Enter Credentials
+  ShelterAuth --> ShelterDashboard : Login Successful
+  
+  state ShelterDashboard {
+    direction TB
+    [*] --> OperationsHub : Daily Command Center
+    OperationsHub --> Pipeline : Manage Dog Workflow
+    OperationsHub --> Inbox : Review Applications
+    OperationsHub --> Tasks : View Tasks
+    
+    Pipeline --> DogDetail : Select Dog
+    DogDetail --> UpdateStage : Move Pipeline Stage
+    DogDetail --> AddMedical : Add Medical Record
+    DogDetail --> UpdateInfo : Edit Dog Info
+    
+    Inbox --> ReviewApp : Review Application
+    ReviewApp --> ApproveApp : Approve
+    ReviewApp --> RejectApp : Reject
+    ReviewApp --> RequestInfo : Ask Questions
+    
+    note right of Pipeline
+      Owner: Shelter Staff
+      Primary workspace for daily operations
+    end note
+  }
+
+  %% ======================
+  %% OWNER/REHOME PATH
+  %% ======================
+  state OwnerOnboarding {
+    direction TB
+    [*] --> CreateOwnerAccount : Sign Up
+    CreateOwnerAccount --> AddDogInfo : Dog Details
+    AddDogInfo --> UploadPhotos : Add Photos
+    UploadPhotos --> SetPreferences : Adopter Preferences
+    SetPreferences --> OwnerReady : Listing Complete
+    
+    note right of OwnerReady
+      Owner: System (Auto-Approved)
+      Dog appears in Discover feed
+    end note
+  }
+
+  OwnerReady --> OwnerDashboard : Manage Listing
+
+  state OwnerDashboard {
+    direction TB
+    [*] --> ViewApplications : See Applications
+    ViewApplications --> ReviewApplicant : Review Adopter
+    ReviewApplicant --> AcceptApplicant : Accept
+    ReviewApplicant --> DeclineApplicant : Decline
+    
+    AcceptApplicant --> ArrangeMeeting : Coordinate Meetup
+    ArrangeMeeting --> CompleteRehome : Successful Adoption
+  }
+
+  CompleteRehome --> [*] : Rehome Complete
+
+  %% ======================
+  %% REJECTION/EXIT PATHS
+  %% ======================
+  AutoReject --> [*] : Application Denied
+  Rejected --> [*] : Application Rejected

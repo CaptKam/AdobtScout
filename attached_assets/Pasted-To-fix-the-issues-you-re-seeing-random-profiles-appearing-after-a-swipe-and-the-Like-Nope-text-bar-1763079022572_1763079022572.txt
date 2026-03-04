@@ -1,0 +1,73 @@
+To fix the issues you’re seeing—random profiles appearing after a swipe and the “Like/Nope” text barely showing—there are a couple of common pitfalls in Framer‑Motion swipe stacks that can cause exactly this behaviour. Below are several suggestions backed by best practices and relevant documentation.
+
+1. Use AnimatePresence and trigger state updates on animation completion
+
+Right now, setCurrentIndex is called via a fixed setTimeout, which may fire before or after the exit animation finishes. This can cause a race condition where React reuses the previous card and briefly shows the wrong profile. Framer‑Motion’s AnimatePresence component is designed to solve exactly this problem: it detects when children are removed and lets you run exit animations on them
+motion.dev
+.
+
+Instead of manually delaying state updates, wrap the card stack in AnimatePresence and move your state update into onAnimationComplete or onExitComplete (for example, use exit props on the motion.div). When the exit animation finishes, increment the index. This ensures the old card unmounts before the new one appears, preventing “ghost” cards.
+
+Example:
+
+<AnimatePresence onExitComplete={() => {
+  setCurrentIndex((prev) => prev + 1);
+  setExitDirection(null);
+  x.set(0);
+}}>
+  {currentDog && (
+    <motion.div
+      key={currentDog.id}
+      // your drag props here
+      exit={{
+        x: exitDirection === 'right' ? 500 : -500,
+        rotate: exitDirection === 'right' ? 25 : -25,
+        opacity: 0,
+      }}
+      transition={{ type: 'spring', stiffness: 200, damping: 25 }}
+    >
+      {/* card content */}
+    </motion.div>
+  )}
+</AnimatePresence>
+
+
+Using AnimatePresence means you no longer rely on setTimeout, and the exit animation always completes before the next profile enters
+motion.dev
+.
+
+2. Provide unique keys and avoid reusing components
+
+React reuses components when their key doesn’t change. If two profiles share the same id (or the key isn’t unique enough), the DOM node may be reused, causing a brief flash of the wrong profile during the exit/enter sequence. Ensure each card in the stack has a unique key, ideally the dog’s ID combined with its index or a timestamp. This prevents React from recycling the same DOM element and eliminates flickering.
+
+3. Adjust the swipe thresholds and overlay ranges
+
+The “Like/Nope” overlays use useTransform to map the drag distance to opacity and scale. The current ranges require a fairly large drag (e.g., 30 to 200 px) before the overlays become visible. If you swipe quickly, the animation may complete before the overlays reach full opacity. To make the “Like/Nope” text appear sooner:
+
+Reduce the input ranges in useTransform so opacity ramps up earlier. For instance, changing [0, 30, 100, 200] to [0, 20, 50, 100] will cause the “Like” overlay to become opaque with a shorter swipe.
+
+Similarly, adjust the “Nope” ranges. Smaller ranges make the overlays more responsive.
+
+The DEV Community article on swipe gestures notes that useTransform allows you to map one motion value to another—for example, mapping swipe distance to the scale or opacity of a button
+dev.to
+. This is exactly how the overlays are animated, so tuning the input/output arrays affects when they appear.
+
+4. Replace the hard‑coded timeout with spring physics
+
+Framer‑Motion has built‑in spring behaviour for returning a dragged element to its origin and controlling friction through dragElastic and dragTransition. The article describing Tinder‑style swipes recommends using dragSnapToOrigin (which is similar to setting dragMomentum={false} in the newer Motion API), dragElastic to control friction, and dragTransition for realistic easing
+dev.to
+. By relying on these physics rather than manually resetting the position, you reduce jank and ensure consistent behaviour across devices.
+
+5. Ensure state consistency during swipe
+
+Make sure that currentDog and currentIndex are derived from the same source and aren’t being updated elsewhere asynchronously (e.g., by an API call). If your swipe mutation changes the order of dogs or inserts new dogs into the list, the next card could appear “random.” To avoid this:
+
+Keep the list of profiles immutable while a swipe animation is in progress.
+
+Only reorder or fetch new profiles after the exit animation completes.
+
+6. Check for reduced motion settings
+
+Finally, be aware that some browsers and devices may have “Reduced Motion” enabled. Framer notes that if this setting is on, animations may be limited to simple opacity fades
+framer.com
+. If your environment respects this preference, the overlays may appear less animated. You can check the user’s prefers-reduced-motion setting and disable the entire swipe animation accordingly or provide a fallback UI.

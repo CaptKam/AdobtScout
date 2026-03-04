@@ -1,0 +1,249 @@
+Core Principle (Non-Negotiable)
+
+Color is a spotlight, not a theme.
+
+You do not add more color.
+You assign meaning to very few colors and enforce it everywhere.
+
+1. What Deserves Color (Only These)
+
+You should allow color pops only for:
+
+Primary Action
+
+State / Status
+
+Progress / Momentum
+
+Urgency (rare)
+
+Everything else stays neutral.
+
+If something doesn’t change behavior, it does not get color.
+
+2. The Pipedrive Pattern (Why It Works)
+
+Pipedrive uses color in three places only:
+
+Pipeline stages (progress)
+
+Primary CTA
+
+Status indicators
+
+It does not:
+
+Color cards randomly
+
+Color text blocks
+
+Use color for layout decoration
+
+That’s the difference.
+
+3. Scout Color System (Recommended)
+
+You should lock these meanings globally.
+
+🎯 Primary Brand Color (Action)
+
+Usage
+
+ONE primary CTA per screen
+
+Progress bars
+
+Active pipeline stage
+
+Rules
+
+Never use twice on one screen
+
+Never use for informational text
+
+Example:
+
+“Resolve blockers”
+
+“Start intake”
+
+🟢 Success / Ready (Progress)
+
+Usage
+
+“Ready for adoption”
+
+Completed steps
+
+Positive confirmations
+
+Rules
+
+Icons or small accents only
+
+Never large backgrounds
+
+🟡 Attention / Pending (Neutral Warning)
+
+Usage
+
+Awaiting review
+
+Pending medical
+
+Needs input
+
+Rules
+
+Use sparingly
+
+Never for static UI
+
+🔴 Danger / Blocker (Rare)
+
+Usage
+
+Legal holds
+
+Medical blocks
+
+Overdue tasks
+
+Rules
+
+Red must hurt when it appears
+
+If red shows often, your system is broken
+
+4. Where Color Pops Look Expensive (Very Important)
+✅ Icons (Best Use)
+
+Coloring icons feels premium because it’s contained.
+
+<Stethoscope className="w-5 h-5 text-red-500" />
+<CheckCircle className="w-5 h-5 text-green-500" />
+
+
+Never color full text blocks.
+
+✅ Thin Accents (Borders / Indicators)
+
+Use 1–2px indicators, not filled cards.
+
+<div className="border-l-2 border-red-500 pl-4">
+
+
+This is exactly how Pipedrive signals urgency.
+
+✅ Progress Bars
+
+Progress is one of the only places color can be bold.
+
+<div className="h-2 bg-muted rounded">
+  <div className="h-2 bg-primary rounded" style={{ width: "62%" }} />
+</div>
+
+
+This feels optimistic, not loud.
+
+5. Where Color Pops Look Cheap (Avoid These)
+
+❌ Full-color cards for non-urgent info
+❌ Multiple colored badges in one row
+❌ Red + yellow + green together
+❌ Colored paragraph text
+❌ Gradients for operational UI
+
+If you ever think “this looks fun,” remove it.
+
+6. Pipeline-Specific Color (Where You Should Lean In)
+
+Pipelines are the one place where color earns its keep.
+
+Example Stage Mapping
+
+Intake → gray / neutral
+
+Medical → yellow
+
+Behavior → blue
+
+Ready → green
+
+Blocked → red
+
+Rules
+
+Color belongs to the stage, not the dog
+
+Never mix stage colors in one card
+
+Use color as a thin header or side rail
+
+This creates instant scanability — the Pipedrive effect.
+
+7. Color Density Rule (Critical)
+
+On any screen:
+
+90% neutral
+
+8% muted accent
+
+2% strong color
+
+If you can screenshot a page and squint:
+
+Your eye should land on one thing
+
+That’s the pop.
+
+8. Copy + Color = Premium Feel
+
+Color without language feels cheap.
+
+Bad:
+
+Red badge: “Error”
+
+Good:
+
+Red badge: “Medical hold — action required”
+
+Color signals where to look.
+Copy tells what to do.
+
+9. How to Apply This to Your Dashboard (Concrete)
+What Gets Color
+
+Hero icon (red only if blockers exist)
+
+Pipeline CTA button
+
+Status icons (medical, ready, blocked)
+
+Progress bars (goals)
+
+What Stays Neutral
+
+Cards
+
+Backgrounds
+
+Text blocks
+
+Layout containers
+
+Your dashboard already supports this — you just tighten the rules.
+
+10. The Award-Winning Test
+
+Ask this every time you add color:
+
+Does this change behavior?
+
+Would removing it reduce clarity?
+
+Is this the only bright thing on the screen?
+
+If any answer is “no,” remove the color.

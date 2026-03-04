@@ -1,0 +1,224 @@
+What to Fix (In Order)
+🔴 FIX #1 — Kill Page Switching (Highest ROI)
+
+Problem
+You are navigating:
+
+Operations
+
+Pipeline
+
+Intake
+
+Medical
+
+Tasks
+
+Applications
+
+That is the single biggest drain.
+
+Fix
+Create ONE canonical workspace:
+
+Pipeline → Click dog → Right-side panel opens
+
+That panel must contain:
+
+Overview
+
+Medical
+
+Behavior
+
+Tasks
+
+Applications
+
+Foster
+
+Do NOT
+
+Send users to /medical, /tasks, /applications for day-to-day work.
+
+Success metric
+
+70% of daily work happens without a full page change.
+
+🔴 FIX #2 — Tasks Are Lying to the User
+
+Problem
+
+“System shows you completed 0 tasks today”
+Even though real work happened.
+
+That destroys trust and motivation.
+
+Fix
+Tasks must:
+
+Auto-complete when the work is done
+
+Be embedded in:
+
+Pipeline stages
+
+Dog profile actions
+
+Example:
+
+Drag dog → auto-complete “Move to Medical”
+
+Add vaccine → auto-complete “Administer vaccine”
+
+Success metric
+
+No staff member ends the day with “0 completed” after real work.
+
+🔴 FIX #3 — Applications + Messages Must Merge
+
+Problem
+You read:
+
+Messages
+
+Then applications
+
+Then dog context
+
+That is backward.
+
+Fix
+Create one Adoption CRM Inbox:
+
+Every thread tied to:
+
+A dog
+
+An applicant
+
+Show:
+
+Readiness score
+
+Red flags
+
+Prior interactions
+
+Do NOT
+
+Make staff open an application just to see if it matters.
+
+Success metric
+
+Application decisions in <2 minutes.
+
+🟠 FIX #4 — Pipeline Needs Inline Actions
+
+Problem
+Pipeline shows state, not decisions.
+
+Fix
+Each stage gets 1–3 inline actions:
+
+Stage	Inline Action
+Intake	Start Medical
+Medical	Mark Cleared
+Photos Needed	Open Camera
+Ready	Feature Dog
+Featured	Review Applications
+
+No modals. No redirects.
+
+Success metric
+
+Pipeline becomes the most used page.
+
+🟠 FIX #5 — Medical Must Gate Adoption Automatically
+
+Problem
+Staff must remember medical constraints.
+
+Fix
+Medical completion should:
+
+Auto-unlock adoption visibility
+
+Block applications when incomplete
+
+Display “Why blocked” clearly
+
+Success metric
+
+Zero adoptions delayed by forgotten medical steps.
+
+🟠 FIX #6 — Foster Is Reactive (Make It Predictive)
+
+Problem
+Foster only gets attention when there’s panic.
+
+Fix
+Add:
+
+Foster capacity bar
+
+“Dogs suitable for foster right now”
+
+Auto-outreach when pipeline backs up
+
+Success metric
+
+Fewer emergency foster calls.
+
+🟡 FIX #7 — Operations Hub Needs a “Now” Mode
+
+Problem
+It shows data, not urgency.
+
+Fix
+Add:
+
+“Next 60 minutes” section
+
+“If nothing else gets done today, do this”
+
+Success metric
+
+Staff stop asking “What should I work on?”
+
+🟡 FIX #8 — Automation Needs Plain English
+
+Problem
+Automation feels invisible or scary.
+
+Fix
+Add a log like:
+
+“Buddy moved to Behavior Eval because medical protocol completed at 11:32 AM.”
+
+Success metric
+
+Staff trust automation instead of double-checking it.
+
+What NOT to Fix Right Now
+
+Do not:
+
+Add more filters
+
+Add more dashboards
+
+Add more roles
+
+Add more analytics
+
+Redesign UI aesthetics
+
+You do not have a feature problem.
+You have a workflow compression problem.
+
+The One-Sentence Diagnosis
+
+Adopt Scout already knows what to do — it just makes users travel too far to do it.
+
+Fix movement, not logic.

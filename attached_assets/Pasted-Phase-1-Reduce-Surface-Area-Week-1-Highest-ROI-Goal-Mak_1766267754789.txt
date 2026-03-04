@@ -1,0 +1,166 @@
+Phase 1: Reduce Surface Area (Week 1 – Highest ROI)
+
+Goal: Make the product feel calmer without touching core logic.
+
+1. Freeze New Features
+
+Before refactoring:
+
+No new routes
+
+No new pipeline stages
+
+No new dashboards
+
+This prevents backsliding while you simplify.
+
+2. Navigation Collapse (Do This First)
+
+This is purely structural and low-risk.
+
+Target rule:
+
+No role sees more than 7 nav items, and most see 4–5.
+
+Final Shelter Nav (Default Staff View):
+
+Dashboard (role-based)
+
+Pipeline
+
+Intake (if permitted)
+
+Applications (if permitted)
+
+Medical (if permitted)
+
+Foster (if permitted)
+
+Inbox
+
+Everything else:
+
+Hidden behind Admin
+
+Or accessed contextually (from a dog, application, or alert)
+
+Success metric:
+A new staff member can describe “where work happens” in one sentence.
+
+Phase 2: Enforce Role Intent (Week 2)
+
+Goal: Stop the UI from behaving like an admin console.
+
+3. Role-Based Home Screens (Non-Negotiable)
+
+This is where cognitive load collapses.
+
+Each role gets:
+
+One default landing screen
+
+One clear primary action
+
+Examples:
+
+Intake → “Start Intake” + Drafts
+
+Vet Tech → “Dogs Needing Medical Action”
+
+Adoption Counselor → “Applications Awaiting Review”
+
+Admin → “Blocked / Escalated Items”
+
+Rule:
+If a role’s home screen needs scrolling to understand, it’s wrong.
+
+4. Permission ≠ Visibility
+
+You already have RBAC. Now enforce UI gating:
+
+If a role cannot act on a section, it should not appear in nav.
+
+Read-only access should be deep-linked, not navigable.
+
+This alone removes the “ERP feeling.”
+
+Phase 3: Pipeline Re-Architecture (Week 3)
+
+Goal: Make the pipeline feel intelligent instead of burdensome.
+
+5. Separate These Concepts Explicitly
+
+Right now they are entangled:
+
+State → Where the dog is
+
+Validation → What is missing
+
+Documentation → Notes and history
+
+They must be visually and logically separate.
+
+6. Auto-Transitions as the Default
+
+You’ve already defined the correct flow.
+
+Implementation rule:
+
+90% of dogs should move forward without drag-and-drop.
+
+Dragging becomes an override, not normal work.
+
+Visual requirement:
+Every blocked card must show:
+
+Reason (medical, behavior, legal)
+
+Owner (role or person)
+
+Next action
+
+If a user asks “why is this stuck?” the UI has failed.
+
+Phase 4: Data Entry Friction (Week 4)
+
+Goal: Reduce burnout and abandonment.
+
+7. Minimum Viable Intake (Critical)
+
+You identified this correctly.
+
+Hard rule:
+
+Intake must be savable in <60 seconds.
+
+Everything else is deferred.
+
+Introduce:
+
+Drafts
+
+Progressive disclosure
+
+Auto-fill + AI suggestions (optional, not blocking)
+
+This is one of the biggest staff satisfaction wins you can ship.
+
+Guardrails to Prevent Regression
+
+To keep Scout from drifting back into complexity:
+
+Design Rules (Write These Down)
+
+No new top-level routes without removing one
+
+Every new feature must declare:
+
+Primary role
+
+Primary screen
+
+Pipelines cannot collect data—only reflect state
+
+Admin power features never leak into staff UI
+
+These are product governance rules, not suggestions.

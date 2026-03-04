@@ -1,0 +1,212 @@
+Where to Start (Single Point of Focus)
+Start with: Navigation Collapse + Role-Based Home Screen (Intake Staff)
+
+This is the highest-leverage move you can make because it:
+
+Immediately reduces overwhelm for everyone
+
+Does not require re-architecting data models
+
+Forces you to make hard product decisions early
+
+Creates a template you can reuse for every other role
+
+If you start anywhere else, you will redesign features that should not be visible in the first place.
+
+Step 1 (Day 1–2): Lock the New Navigation Contract
+Do not write code yet.
+
+Create a single source of truth document that says:
+
+Allowed Top-Level Shelter Nav
+Dashboard
+Pipeline
+Intake
+Applications
+Medical
+Foster
+Inbox
+
+Admin-Only (Hidden)
+Staff
+Analytics
+Settings
+Plugins
+Automation
+Bulk Ops
+Resources
+Donations
+
+
+Rules
+
+If a role cannot take an action in a section → it does not appear
+
+Read-only access = deep links only
+
+No exceptions
+
+Once this is written and agreed, you have stopped scope creep.
+
+Step 2 (Day 2–3): Build the Intake Staff Home Screen (First UX Reset)
+Why Intake First
+
+It is the earliest point of friction
+
+It sets data quality downstream
+
+It touches the pipeline but doesn’t depend on it
+
+It gives immediate staff relief
+
+Intake Staff Home = ONE Screen
+
+Purpose:
+
+“Help me process arrivals quickly and correctly.”
+
+This screen contains only:
+
+Primary CTA
+
+“Start New Intake”
+
+Draft Intakes
+
+Saved but incomplete
+
+Timestamped
+
+Resume in one click
+
+Today’s Arrivals
+
+Recently completed intakes
+
+Status indicator (Medical pending, Behavior pending)
+
+Blocking Alerts (Rare)
+
+Legal hold issues
+
+Duplicate microchip warnings
+
+This screen must NOT contain:
+
+Charts
+
+Global stats
+
+Adoption data
+
+Foster info
+
+Tasks
+
+Calendar
+
+If it feels “empty,” that’s correct.
+
+Step 3 (Day 3–5): Refactor Intake into a Wizard (Not a Form)
+Intake = Progressive Disclosure
+Step 1 (Required – under 60 seconds)
+
+Intake type
+
+Photo
+
+Approx age
+
+Sex
+
+Kennel
+
+➡️ Auto-creates dog record + pipeline entry
+
+Step 2 (Optional / Later)
+
+Breed (AI-suggested)
+
+Weight
+
+Color
+
+Step 3 (Deferred)
+
+Surrender details
+
+Microchip
+
+Notes
+
+Critical Rules
+
+“Save Draft” always available
+
+No blocking fields beyond Step 1
+
+Pipeline moves automatically on submit
+
+Step 4 (Week 2): Wire Auto-Transition Intake → Medical
+
+This is the first pipeline automation you implement.
+
+On Intake Submit:
+
+Dog moves to Medical Evaluation
+
+Medical queue updates automatically
+
+Intake staff is done
+
+No dragging. No decisions. No ambiguity.
+
+Step 5 (Only After Intake Feels Calm): Move to the Next Role
+
+Once Intake feels:
+
+Fast
+
+Predictable
+
+Low-stress
+
+Then repeat the same pattern for:
+
+Vet Tech (Medical Queue)
+
+Adoption Counselor (Applications Inbox)
+
+Admin (Needs Attention Now)
+
+Each role gets:
+
+One home screen
+
+One primary action
+
+One mental model
+
+What You Should NOT Do Yet
+
+Do not:
+
+Redesign the entire pipeline UI
+
+Add AI scoring everywhere
+
+Touch analytics
+
+Build new dashboards
+
+Polish visuals
+
+Clarity first. Polish later.
+
+The North Star Question (Use This Daily)
+
+Before adding or changing anything, ask:
+
+“Does this help a specific role finish their shift faster?”
+
+If the answer isn’t an immediate yes, stop.

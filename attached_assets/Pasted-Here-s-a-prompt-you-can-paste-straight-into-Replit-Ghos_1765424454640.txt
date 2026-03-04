@@ -1,0 +1,390 @@
+Here’s a prompt you can paste straight into Replit Ghostwriter to have it build the Admin Diagnostic Console.
+
+You can tweak names (Adopt Scout, etc.) if needed, but this is ready to use as-is:
+
+You are an expert full-stack TypeScript engineer working on Adopt Scout, a multi-portal web app with:
+
+- Node/Express API backend (TypeScript)
+- React + TypeScript frontend (Vite or similar)
+- Tailwind CSS + shadcn/ui for styling
+- Deployed on Replit
+
+Your task is to ADD an **Admin Diagnostic Console** that lets admins:
+
+1. Ping and test important API routes/endpoints across the platform
+2. See health status for services (auth, dogs, shelter CRM, AI, webhooks, DB)
+3. Run a “Run All Tests” regression suite from a single admin page
+4. See response times, status codes, and any errors
+5. (Optional) View recent webhook events (stubbed for now)
+
+Assume:
+- There is already some auth system; we will just stub simple admin access checking for the diagnostic routes.
+- If any file paths don’t exist, create them in a clean, sensible structure.
+- Use clean, modern, production-quality TypeScript for both backend and frontend.
+
+=====================================
+BACKEND REQUIREMENTS (API DIAGNOSTICS)
+=====================================
+
+Create an admin diagnostics API namespace under something like:
+
+- `/api/admin/diagnostics/health`
+- `/api/admin/diagnostics/run-all`
+- `/api/admin/diagnostics/routes`
+- `/api/admin/diagnostics/webhooks` (stubbed)
+
+Use Express + TypeScript.
+
+1. Define a shared type for test results:
+
+   ```ts
+   export type DiagnosticStatus = "PASS" | "FAIL" | "WARN";
+
+   export interface DiagnosticResult {
+     id: string;            // unique id for the test
+     label: string;         // human-readable name
+     category: string;      // e.g. "Auth", "Dogs", "Shelter CRM", "AI", "Webhooks", "Database"
+     route?: string;        // tested API route if relevant
+     method?: string;       // GET/POST/etc
+     status: DiagnosticStatus;
+     statusCode?: number;   // HTTP status code, if applicable
+     durationMs: number;    // response time
+     message: string;       // short description
+     timestamp: string;     // ISO timestamp for when test ran
+     error?: string;        // error details if failed
+   }
+
+
+Create a route test config array that defines the key routes to hit.
+Use something like:
+
+interface RouteTestConfig {
+  id: string;
+  label: string;
+  category: string;
+  route: string;
+  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+  body?: any;
+  expectedStatus?: number; // default 200
+}
+
+const ROUTE_TESTS: RouteTestConfig[] = [
+  {
+    id: "auth-login-health",
+    label: "Auth: Login endpoint",
+    category: "Auth",
+    route: "/api/auth/login/health",
+    method: "GET",
+    expectedStatus: 200
+  },
+  {
+    id: "dogs-featured",
+    label: "Dog Discovery: Featured dogs",
+    category: "Dogs",
+    route: "/api/dogs/featured",
+    method: "GET",
+    expectedStatus: 200
+  },
+  {
+    id: "shelter-pipeline",
+    label: "Shelter CRM: Pipeline list",
+    category: "Shelter CRM",
+    route: "/api/shelter/pipeline",
+    method: "GET",
+    expectedStatus: 200
+  },
+  {
+    id: "ai-compatibility",
+    label: "AI: Compatibility engine",
+    category: "AI",
+    route: "/api/ai/compatibility/health",
+    method: "GET",
+    expectedStatus: 200
+  }
+  // Add a few more representative routes as needed
+];
+
+
+These are examples; implement the tests even if the underlying routes are placeholders (you can create simple health endpoints if they don’t exist).
+
+Implement a reusable helper runRouteTest(config: RouteTestConfig): Promise<DiagnosticResult> that:
+
+Measures duration using Date.now() before and after fetch or axios.
+
+Calls the given route on the SAME server (e.g., http://localhost:<port> or use relative fetch if appropriate).
+
+Compares the HTTP status to expectedStatus (defaults to 200).
+
+Returns a DiagnosticResult object with:
+
+status: "PASS" if response is ok and expected status matches
+
+status: "FAIL" if error or wrong status
+
+status: "WARN" if something is off but not fatal (e.g., slow response > 1000ms)
+
+Catches errors and populates error field.
+
+/api/admin/diagnostics/routes endpoint (GET)
+
+Returns the list of available route tests (ROUTE_TESTS) so the frontend can display them.
+
+No testing here, just metadata.
+
+/api/admin/diagnostics/run-all endpoint (POST or GET)
+
+Iterates over all ROUTE_TESTS and runs runRouteTest for each.
+
+Runs them in parallel using Promise.all.
+
+Returns an array of DiagnosticResult.
+
+Also compute and include summary info:
+
+interface RunAllSummary {
+  total: number;
+  passed: number;
+  failed: number;
+  warned: number;
+  startedAt: string;
+  finishedAt: string;
+  durationMs: number;
+}
+
+interface RunAllResponse {
+  summary: RunAllSummary;
+  results: DiagnosticResult[];
+}
+
+
+/api/admin/diagnostics/health endpoint (GET)
+
+A lightweight endpoint that:
+
+Option A: runs a very small subset of tests (e.g., only DB ping + auth health).
+
+Option B: just returns a static “OK” + version info.
+
+Return:
+
+{
+  status: "OK",
+  app: "Adopt Scout Admin Diagnostics",
+  timestamp: "2025-01-01T00:00:00.000Z",
+  environment: process.env.NODE_ENV || "development"
+}
+
+
+Database test (optional but ideal):
+
+Add a simple DB health check function that:
+
+Performs a trivial query like SELECT 1 using your ORM (e.g., Drizzle, Prisma, raw pg).
+
+Wrap it in a DiagnosticResult using the same structure.
+
+Either:
+
+Expose it as a separate endpoint /api/admin/diagnostics/db, or
+
+Include it in run-all as another test object.
+
+Stub webhook diagnostics (for future Vapi/Stripe/etc.):
+
+/api/admin/diagnostics/webhooks can for now return a static list or empty list.
+
+Type:
+
+interface WebhookEventLog {
+  id: string;
+  source: "vapi" | "stripe" | "email" | "other";
+  eventType: string;
+  receivedAt: string;
+  status: "SUCCESS" | "FAILED";
+  message?: string;
+}
+
+
+For now, just return an empty array or some mocked data so the UI can be wired.
+
+Protect these endpoints with a simple admin check middleware stub (for now):
+
+function requireAdminDiagnostics(req: Request, res: Response, next: NextFunction) {
+  // TODO: Replace this with real auth/role checking
+  // For now, allow everything in development, but structure is ready.
+  if (process.env.NODE_ENV === "production") {
+    // e.g., check req.user?.isAdmin
+    // return res.status(403).json({ message: "Forbidden" });
+  }
+  next();
+}
+
+
+Apply this middleware to all /api/admin/diagnostics/* routes.
+
+Make sure to register the diagnostics router in the main Express app.
+
+=====================================
+FRONTEND REQUIREMENTS (ADMIN PAGE)
+
+Create a new Admin Diagnostic Console page, for example:
+
+Route: /admin/system-diagnostics (or similar)
+
+Built with React + TypeScript
+
+Styled using Tailwind + shadcn/ui
+
+Overall UX goals:
+
+Clean, modern, “million-dollar app” feel.
+
+At a glance: color-coded health summary.
+
+Ability to run all tests with a button.
+
+See a table of test results.
+
+Filter by category and status.
+
+Click a row to see details.
+
+Layout:
+
+Page title: “System Diagnostics”
+
+Top section: Summary cards
+
+Total tests
+
+Passed
+
+Failed
+
+Warnings
+
+Below: Controls + Table
+
+Filters:
+
+Category dropdown (All, Auth, Dogs, Shelter CRM, AI, Webhooks, Database)
+
+Status filter (All, PASS, FAIL, WARN)
+
+Search input (filter by label or route)
+
+Table of tests:
+
+Columns: Status (with colored badge), Label, Category, Route, Method, Duration, Timestamp
+
+Right or bottom panel: “Test Details”
+
+Shows selected test’s JSON result formatted nicely.
+
+Data flow:
+
+On page load:
+
+Call GET /api/admin/diagnostics/routes to show the list of available tests.
+
+When clicking “Run All Tests”:
+
+Call POST (or GET) /api/admin/diagnostics/run-all.
+
+Show loading indicator on the button.
+
+When response comes back:
+
+Update summary cards with summary.
+
+Populate table rows with results.
+
+Optionally, allow running just a single test by ID later (for now, “Run All” is enough).
+
+Status visuals:
+
+Use clear badges:
+
+PASS → green background
+
+FAIL → red background
+
+WARN → amber/yellow background
+
+Also show a tiny colored dot in the table row for quick scanning.
+
+Components and structure:
+
+Create a reusable StatusBadge component that takes status: DiagnosticStatus.
+
+Create a reusable SummaryCard for the top metrics.
+
+Use shadcn/ui components where helpful:
+
+Cards
+
+Input
+
+Select/Dropdown
+
+Table
+
+Skeleton/loading states
+
+TypeScript types on frontend:
+
+Mirror DiagnosticResult, RunAllSummary, and RunAllResponse on the client side.
+
+Use them for typed fetch hooks.
+
+Code quality:
+
+Use functional React components with hooks.
+
+Keep components small and focused.
+
+Use async/await for data fetching with proper error handling.
+
+If using a simple fetch wrapper or React Query, that’s fine; if not present, just use fetch directly with useEffect and useState.
+
+Optional: Health indicator in the admin nav
+
+Add a small status dot in the admin navigation bar that calls /api/admin/diagnostics/health and displays:
+
+Green if “OK”
+
+Red if not
+
+This can be done later, but structure the code so it’s easy to add.
+
+=====================================
+GENERAL GUIDELINES
+
+Keep all names consistent: adminDiagnosticsRouter, DiagnosticResult, etc.
+
+Ensure all new backend routes are wired into the main Express app.
+
+Ensure the frontend route is wired into whatever router (React Router, etc.) is in use.
+
+Prefer clarity and maintainability over cleverness.
+
+Include comments explaining the main parts of the diagnostics system, so it’s easy to extend with more tests later.
+
+Now:
+
+Create or update the backend Express router to implement the diagnostics endpoints as described.
+
+Add the admin diagnostics page on the frontend at /admin/system-diagnostics.
+
+Make sure the page can:
+
+Show available tests
+
+Run all tests
+
+Display summary + results with filters and details.
+
+Generate all necessary files and code changes to make this work end-to-end.
+
+
+If you want, next I can give you a second smaller prompt just for iterating on the **UI polish** once Ghostwriter scaffo

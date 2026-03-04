@@ -1,0 +1,78 @@
+🧭 Authentication Strategy for Scout
+🎯 Core Principle
+
+Never block emotional momentum.
+Users should be able to browse, swipe, and fall in love with a dog before they’re asked to sign up.
+
+🪄 Ideal Placement: After Emotional Hook
+🔹 Recommended Flow:
+Welcome → Intent → Lifestyle Quiz → AI Reveal → Swipe Discovery → ❤️ Like (x3) → AUTHENTICATE
+
+
+Where to Authenticate:
+➡️ Right after 3 “Likes” or when the user tries to message/contact a shelter or owner.
+
+🔒 Moment 1: Post-Swipe Engagement (Primary)
+
+After they’ve liked 3 dogs, trigger a modal:
+
+“Save your matches so Scout can notify you when similar dogs appear near you 🐾”
+
+CTA Buttons:
+
+“Continue with Google”
+
+“Continue with Email”
+
+Why it works:
+
+The user already has emotional buy-in.
+
+Feels like a reward (saving matches) rather than a barrier.
+
+Conversion rates at this point are typically 50–70% higher than pre-swipe signups.
+
+🔒 Moment 2: Messaging (Secondary)
+
+If a user taps “Contact Shelter” or “Adopt Me”, show:
+
+“Create a free Scout account to message shelters and schedule visits.”
+
+This feels functional, not forced — tied to the action’s purpose.
+
+🔒 Moment 3: Optional Persistent Login (Tertiary)
+
+At the top of the home page (hamburger or profile icon):
+
+“Sign in to sync your favorites across devices.”
+
+This is passive authentication, for users who proactively want to save data early.
+
+💬 Psychological Framing
+Timing	Emotion	Message Tone
+Early	Curiosity	“Let’s explore together!”
+Mid	Excitement	“Save your favorites!”
+Late	Commitment	“Adopt your new best friend!”
+
+Scout should ask for authentication only when users perceive value from doing so.
+
+🔐 Technical Notes
+
+Use Replit Auth (Google, GitHub, Email) for simplicity.
+
+Store session tokens locally; users can remain “guest” mode until signup.
+
+When they convert to authenticated, merge their local preferences + AI profile (no data loss).
+
+Shelters and individual owners authenticate upfront, since they’ll upload/manage data.
+
+✅ Summary
+User Type	Auth Timing	Reason
+Adopters	After emotional engagement (3+ likes or first message)	Maximize conversion & reduce dropoff
+Shelters	Required at signup	Trust, moderation, and data control
+Owners (Rehomers)	Required before posting	Accountability & authenticity
+
+Final placement recommendation:
+
+Add authentication after step 11 (“AI Reveal”) → during the first emotional action (like, save, or contact).
+Never before the user swipes or discovers dogs.
