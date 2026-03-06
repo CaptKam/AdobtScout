@@ -164,7 +164,7 @@ export default function ShelterCheckout() {
     : 0;
 
   return (
-    
+    <>
       <div className="p-4 md:p-6 space-y-6">
         <div className="flex items-center justify-between">
           <div>
@@ -571,6 +571,6 @@ export default function ShelterCheckout() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    
+    </>
   );
 }

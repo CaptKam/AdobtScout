@@ -7,10 +7,12 @@ import { assembleScoutContext, formatContextForPrompt, type ScoutContext } from 
 import { extractInsightsFromMessage, analyzeSwipePatterns } from "./scout-insights";
 
 // Using gpt-5.1: Latest OpenAI model with enhanced reasoning, better context understanding, and improved adoption matching
-const openai = new OpenAI({
-  baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
-  apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY
-});
+function getOpenAI(): OpenAI {
+  return new OpenAI({
+    baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
+    apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY || "placeholder",
+  });
+}
 
 export const scoutSystemPrompt = `# Persona
 You are "Scout," an advanced AI canine matchmaker and adoption expert. You combine deep expertise in dog breeds, animal behavior, behavioral psychology, shelter operations, and the adoption process with sophisticated reasoning about lifestyle compatibility. You are warm, empathetic, encouraging, and genuinely invested in creating lasting, successful matches between dogs and families.
@@ -313,7 +315,7 @@ export async function getChatResponse(
   });
 
   try {
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: "gpt-5.1",
       messages,
       max_completion_tokens: 900,
@@ -372,7 +374,7 @@ export async function streamChatResponse(
     content: userMessage
   });
 
-  const stream = await openai.chat.completions.create({
+  const stream = await getOpenAI().chat.completions.create({
     model: "gpt-5.1",
     messages,
     max_completion_tokens: 900,
@@ -418,7 +420,7 @@ ${dog.specialNeeds ? `- Special needs: ${dog.specialNeeds}` : ""}
 
 Write in a warm, compassionate tone that helps potential adopters connect emotionally while being realistic about needs.`;
 
-  const response = await openai.chat.completions.create({
+  const response = await getOpenAI().chat.completions.create({
     model: "gpt-5.1",
     messages: [
       { role: "system", content: scoutSystemPrompt },
@@ -495,7 +497,7 @@ Provide specific, actionable compatibility reasons focusing on lifestyle and fam
 
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
-      const response = await openai.chat.completions.create({
+      const response = await getOpenAI().chat.completions.create({
         model: "gpt-5.1",
         messages: [
           { role: "system", content: scoutSystemPrompt },
@@ -570,7 +572,7 @@ export async function getEnhancedChatResponse(
   });
 
   try {
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: "gpt-5.1",
       messages,
       max_completion_tokens: 1000, // Increased for richer responses
@@ -621,7 +623,7 @@ export async function getJourneyCoachingMessage(
 
   const guidance = stepGuidance[journeyStep] || `Provide supportive guidance for adopting ${dogName}.`;
 
-  const response = await openai.chat.completions.create({
+  const response = await getOpenAI().chat.completions.create({
     model: "gpt-5.1",
     messages: [
       { role: "system", content: scoutSystemPrompt },
@@ -656,7 +658,7 @@ export async function generateProactiveSuggestion(
   }
 
   try {
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: "gpt-5.1",
       messages: [
         { role: "system", content: "You are Scout, a friendly AI matchmaker. Generate brief, encouraging suggestions. Be warm but concise." },

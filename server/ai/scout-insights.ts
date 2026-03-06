@@ -5,10 +5,12 @@ import OpenAI from "openai";
 import { db, schema } from "../db";
 import { eq, and, inArray, sql } from "drizzle-orm";
 
-const openai = new OpenAI({
-  baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
-  apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY
-});
+function getOpenAI(): OpenAI {
+  return new OpenAI({
+    baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
+    apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY || "placeholder",
+  });
+}
 
 // Types for insight extraction
 interface ExtractedInsight {
@@ -49,7 +51,7 @@ Return ONLY valid JSON array:`;
   try {
     console.log(`[Scout Insights] Extracting insights for user ${userId} from message: "${userMessage.substring(0, 50)}..."`);
     
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: "gpt-4.1-mini",
       messages: [
         { role: "system", content: "You are an insight extraction system. Extract user preferences about dog adoption from conversations. Return a JSON object with an 'insights' array." },

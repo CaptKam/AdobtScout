@@ -3,10 +3,12 @@ import OpenAI from "openai";
 import { db } from "../db";
 import { dogs, tasks, medicalRecords } from "@shared/schema";
 
-const openai = new OpenAI({
-  baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
-  apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY
-});
+function getOpenAI(): OpenAI {
+  return new OpenAI({
+    baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
+    apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY || "placeholder",
+  });
+}
 
 interface VoiceCommand {
   action: "create_task" | "update_dog" | "add_medical" | "query_info" | "schedule_appointment";
@@ -16,7 +18,7 @@ interface VoiceCommand {
 }
 
 export async function parseVoiceCommand(transcriptText: string, shelterId: string): Promise<VoiceCommand> {
-  const response = await openai.chat.completions.create({
+  const response = await getOpenAI().chat.completions.create({
     model: "gpt-5.1",
     messages: [
       { role: "system", content: "Parse shelter staff voice commands into structured actions. Return JSON with action, dogName, parameters, confidence." },

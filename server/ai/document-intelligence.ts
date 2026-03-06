@@ -2,10 +2,12 @@
 // Document Intelligence - OCR + AI extraction for adoption documents
 import OpenAI from "openai";
 
-const openai = new OpenAI({
-  baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
-  apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY
-});
+function getOpenAI(): OpenAI {
+  return new OpenAI({
+    baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
+    apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY || "placeholder",
+  });
+}
 
 export interface DocumentExtractionResult {
   documentType: string;
@@ -22,7 +24,7 @@ export async function extractTextFromDocument(
   documentType: string
 ): Promise<string> {
   try {
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: "gpt-5",
       messages: [
         {
@@ -56,7 +58,7 @@ export async function processGovernmentID(
   imageBase64: string
 ): Promise<DocumentExtractionResult> {
   try {
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: "gpt-5",
       messages: [
         {
@@ -118,7 +120,7 @@ export async function processProofOfResidence(
   imageBase64: string
 ): Promise<DocumentExtractionResult> {
   try {
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: "gpt-5",
       messages: [
         {
@@ -180,7 +182,7 @@ export async function processVetReference(
   imageBase64: string
 ): Promise<DocumentExtractionResult> {
   try {
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: "gpt-5",
       messages: [
         {
@@ -260,7 +262,7 @@ export async function processDocument(
 
   // Auto-detect document type
   try {
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: "gpt-5",
       messages: [
         {

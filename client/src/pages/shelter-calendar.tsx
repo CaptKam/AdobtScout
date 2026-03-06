@@ -154,7 +154,7 @@ export default function ShelterCalendar() {
   }, [events]);
 
   return (
-    
+    <>
       <div className="flex h-full" data-testid="page-shelter-calendar">
         <div className={cn("flex-1 p-4 md:p-6 space-y-4 overflow-auto", showTasksPanel && "lg:pr-0")}>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -596,6 +596,6 @@ export default function ShelterCalendar() {
           background: hsl(var(--muted) / 0.3);
         }
       `}</style>
-    
+    </>
   );
 }
