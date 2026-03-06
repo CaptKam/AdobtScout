@@ -20,6 +20,9 @@ import { emitAnalyzeRequest, isPluginEnabled, getCreatedMedicalRecordsSync, enab
 import { isPluginEnabled as isAutomationsPluginEnabled, enablePlugin as enableAutomationsPlugin, disablePlugin as disableAutomationsPlugin } from "./plugins/automations";
 import { eventBus } from "./events/event-bus";
 
+// Modular route imports (Phase 2 CRM consolidation)
+import { registerModularRoutes } from "./routes/index";
+
 // Helper function to calculate distance between two points (Haversine formula)
 function calculateDistance(
   lat1: number,
@@ -577,9 +580,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   await ensureDefaultShelter();
   await initializeDogs();
 
+  // Register modular route modules (auth, dogs, shelter)
+  // These are extracted from this monolithic file as part of CRM consolidation
+  registerModularRoutes(app);
 
   // ============================================
-  // AUTH ROUTES
+  // REMAINING ROUTES (admin, AI, user profiles, etc.)
+  // These will be extracted to their own modules incrementally
   // ============================================
 
   // Demo account endpoint
