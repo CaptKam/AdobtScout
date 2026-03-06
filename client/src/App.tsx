@@ -159,6 +159,11 @@ function Router() {
           <AdminLayout><AdminPlugins /></AdminLayout>
         </Route>
 
+        {/* Redirect old shelter login to unified login */}
+        <Route path="/shelter/login">
+          <Redirect to="/login?intended_role=shelter" />
+        </Route>
+
         {/* Shelter Routes - Unified AppShell replaces old ShelterLayout */}
         <Route path="/shelter/:rest*">
           <AppShell>
