@@ -524,7 +524,7 @@ export function AppShell({ children }: AppShellProps) {
         <UnifiedSidebar currentUser={currentUser} />
         <div className="flex flex-col flex-1 overflow-hidden">
           <AppShellHeader currentUser={currentUser} />
-          <main className="flex-1 overflow-y-auto modern-admin-content">
+          <main className="flex-1 h-0 overflow-y-auto modern-admin-content">
             {children}
           </main>
           {isShelter && <ShelterQuickActions />}
