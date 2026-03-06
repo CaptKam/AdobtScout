@@ -394,13 +394,13 @@ export function AuthForm({ mode, intendedRole = 'adopter', onSuccess }: AuthForm
           )}
         </div>
 
-        {/* Shelter login link */}
+        {/* Shelter login link - now uses unified login with role param */}
         {mode === 'login' && intendedRole !== 'shelter' && (
           <div className="text-center text-sm mt-4">
             <p className="text-muted-foreground">
               Are you a shelter?{' '}
               <a
-                href="/shelter/login"
+                href="/login?intended_role=shelter"
                 className="text-primary font-semibold hover:underline inline-flex items-center gap-1"
                 data-testid="link-shelter-login"
               >

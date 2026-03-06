@@ -13,25 +13,26 @@ export default function LoginPage() {
   const intendedRole = (searchParams.get('intended_role') || 'adopter') as 'adopter' | 'shelter' | 'owner';
 
   useEffect(() => {
-    // Redirect shelters to their dedicated login page
-    if (intendedRole === 'shelter') {
-      navigate("/shelter/login");
-    }
-  }, [intendedRole, navigate]);
-
-  useEffect(() => {
     if (isAuthenticated) {
-      navigate("/onboarding");
+      // Route shelter users to shelter operations, adopters to onboarding
+      if (intendedRole === 'shelter') {
+        navigate("/shelter/operations");
+      } else {
+        navigate("/onboarding");
+      }
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, intendedRole, navigate]);
 
   const handleLoginSuccess = async () => {
-    // Clear all cached data to ensure fresh session
     queryClient.clear();
     await queryClient.invalidateQueries();
-    
+
     setTimeout(() => {
-      navigate("/onboarding");
+      if (intendedRole === 'shelter') {
+        navigate("/shelter/operations");
+      } else {
+        navigate("/onboarding");
+      }
     }, 100);
   };
 
