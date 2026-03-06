@@ -121,7 +121,7 @@ export default function ApplicationsCRM() {
 
   return (
     
-      <div className="h-[calc(100vh-64px)] flex flex-col">
+      <div className="h-full flex flex-col">
         {/* Header */}
         <div className="p-6 pb-4 border-b">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">

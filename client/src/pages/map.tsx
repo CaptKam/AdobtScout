@@ -3,10 +3,9 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Navigation, X, MessageCircle, Heart, Utensils, Syringe, Scissors, Cpu, GraduationCap, Brain, Package, Home, HelpCircle, Store, ExternalLink, Phone, Clock, Globe } from "lucide-react";
+import { MapPin, Navigation, X, MessageCircle, Heart, Utensils, Syringe, Scissors, Cpu, GraduationCap, Brain, Package, Home, HelpCircle, Store, ExternalLink, Phone, Clock, Globe, SlidersHorizontal } from "lucide-react";
 import type { UserProfile, AdvertiserLocationWithBusiness } from "@shared/schema";
 import { useLocation } from "wouter";
-import Header from "@/components/header";
 import { FosterMap } from "@/components/foster-map";
 import { DogsNeedFosterMap } from "@/components/dogs-need-foster-map";
 import { apiRequest, queryClient, getQueryFn } from "@/lib/queryClient";
@@ -895,17 +894,19 @@ function AdoptModeMap({ currentUser, profile }: { currentUser: User | null | und
 
   return (
     <div className="h-full flex flex-col bg-background">
-      {/* Header with Filter Button */}
-      <div className="relative">
-        <Header 
-          showFilterButton={true}
-          onFilterClick={() => setShowFilters(true)}
-        />
-      </div>
       {/* Map Info Bar */}
       <div className="p-2 bg-card/50 border-b">
         <div className="flex items-center justify-between px-2">
           <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setShowFilters(true)}
+              className="h-8 w-8 shrink-0"
+              data-testid="button-filters"
+            >
+              <SlidersHorizontal className="w-4 h-4" />
+            </Button>
             <MapPin className="w-4 h-4 text-muted-foreground" />
             {!isLoading && filteredDogs && filteredDogs.length > 0 && (
               <p className="text-sm text-muted-foreground">{filteredDogs.length} dogs nearby</p>

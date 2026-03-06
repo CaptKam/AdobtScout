@@ -237,7 +237,7 @@ export default function ShelterDogDetail() {
 
   return (
     <>
-    <div className="h-[calc(100vh-64px)] flex flex-col">
+    <div className="h-full flex flex-col">
       <div className="flex-shrink-0 border-b bg-background">
           <div className="p-4 md:p-6">
             <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4">

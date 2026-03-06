@@ -523,7 +523,7 @@ export default function Profile() {
   // Loading state
   if (userLoading || profileLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 p-4">
+      <div className="h-full bg-gradient-to-b from-background to-muted/20 p-4">
         <div className="max-w-4xl mx-auto space-y-6">
           <Skeleton className="h-48 w-full rounded-2xl" />
           <Skeleton className="h-32 w-full rounded-2xl" />
@@ -536,7 +536,7 @@ export default function Profile() {
   // Not authenticated
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 flex items-center justify-center p-4">
+      <div className="h-full bg-gradient-to-b from-background to-muted/20 flex items-center justify-center p-4">
         <Card className="max-w-md w-full shadow-xl">
           <CardContent className="pt-6 text-center space-y-6">
             <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
@@ -557,7 +557,7 @@ export default function Profile() {
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 flex items-center justify-center p-4">
+      <div className="h-full bg-gradient-to-b from-background to-muted/20 flex items-center justify-center p-4">
         <Card className="max-w-md w-full shadow-xl">
           <CardContent className="pt-6 text-center space-y-6">
             <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
@@ -577,7 +577,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-muted/5 to-muted/10 pb-24 overflow-x-hidden w-full">
+    <div className="bg-gradient-to-b from-background via-muted/5 to-muted/10 pb-8 overflow-x-hidden w-full">
       <div className="w-full max-w-5xl mx-auto px-2 sm:px-4 md:px-6 py-3 sm:py-4 md:py-6 space-y-3 sm:space-y-4 md:space-y-6 overflow-x-hidden">
         
         {/* ===== HERO SECTION ===== */}
