@@ -48,7 +48,7 @@ export default function OwnerDashboard() {
   // Show loading state while checking authorization
   if (userLoading || profileLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 flex items-center justify-center">
+      <div className="h-full bg-gradient-to-br from-primary/5 via-background to-accent/5 flex items-center justify-center">
         <p className="text-muted-foreground">Loading...</p>
       </div>
     );
@@ -60,7 +60,7 @@ export default function OwnerDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 p-8">
+    <div className="h-full bg-gradient-to-br from-primary/5 via-background to-accent/5 p-8 overflow-y-auto">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">

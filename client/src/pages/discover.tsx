@@ -519,16 +519,14 @@ function AdoptModeDiscover({ currentUser, userProfile }: { currentUser: any; use
   };
 
   return (
-    <div 
-      className="h-full flex flex-col items-center justify-start pt-2 relative overflow-hidden bg-gradient-to-b from-background to-muted/20 md:pb-0 animate-fadeIn" 
-      style={{ paddingBottom: 'calc(var(--bottom-nav-height) + 0.5rem)' }}
-      onKeyDown={handleKeyDown} 
+    <div
+      className="h-full flex flex-col items-center justify-start pt-2 relative overflow-hidden bg-gradient-to-b from-background to-muted/20 animate-fadeIn"
+      onKeyDown={handleKeyDown}
       tabIndex={0}
     >
       {/* Card Stack Container - Tinder style with viewport-aware height */}
-      <div 
-        className="relative w-full max-w-lg md:max-w-2xl px-2 sm:px-3 md:px-0 md:h-[700px] lg:h-[750px]"
-        style={{ height: 'calc(100dvh - var(--bottom-nav-height) - 10rem)' }}
+      <div
+        className="relative w-full max-w-lg md:max-w-2xl px-2 sm:px-3 md:px-0 flex-1 min-h-0"
       >
         {/* Filter Controls */}
         <div className="absolute -top-14 left-0 right-0 flex justify-center gap-2 z-20">

@@ -265,7 +265,7 @@ export default function UnifiedInbox() {
 
   return (
     
-      <div className="h-[calc(100vh-64px)] flex flex-col">
+      <div className="h-full flex flex-col">
         <div className="p-3 md:p-6 pb-3 md:pb-4 border-b bg-background">
           <div className="flex flex-col gap-3 md:gap-4">
             <div className="flex items-center justify-between">

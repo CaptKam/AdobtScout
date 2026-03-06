@@ -728,7 +728,7 @@ const FloatingActionButton = memo(function FloatingActionButton({
   ];
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col-reverse items-end gap-3">
+    <div className="fixed bottom-6 right-6 z-40 flex flex-col-reverse items-end gap-3">
       {/* Action buttons - appear above main FAB */}
       <AnimatePresence>
         {isOpen && actions.map((action, idx) => (
@@ -1264,7 +1264,7 @@ export default function PipelineView() {
 
   if (isLoading) {
     return (
-        <div className="flex items-center justify-center h-[calc(100vh-64px)]">
+        <div className="flex items-center justify-center h-full">
           <p className="text-muted-foreground">Loading...</p>
         </div>
     );
@@ -1272,8 +1272,8 @@ export default function PipelineView() {
 
   return (
     <>
-      <div className="h-[calc(100vh-64px)] flex">
-      <div className="flex-1 p-4 md:p-6 flex flex-col min-w-0 transition-all duration-300">
+      <div className="h-full flex">
+      <div className="flex-1 flex flex-col min-w-0 transition-all duration-300">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <div>
             <h1 className="text-xl md:text-2xl font-bold" data-testid="text-page-title">Pipeline</h1>
